@@ -172,7 +172,7 @@ namespace MP1_AudioSwitcher
         int i = 0;
         if (devices != null)
         {
-          foreach (var device in GetPlaybackDevices())
+          foreach (var device in devices)
           {
 
               dlgSetPlaybackDevice.Add(device.FullName);
