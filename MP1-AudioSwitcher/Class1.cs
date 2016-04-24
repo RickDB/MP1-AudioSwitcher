@@ -135,8 +135,7 @@ namespace MP1_AudioSwitcher
     {
       try
       {
-        CoreAudioController ac = new CoreAudioController();
-        ac.SetDefaultDevice(device);
+        _ac.SetDefaultDevice(device);
       }
       catch (Exception ex)
       {
