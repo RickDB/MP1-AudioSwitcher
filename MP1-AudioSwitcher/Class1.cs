@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using AudioSwitcher.AudioApi;
 using MediaPortal.Configuration;
 using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
 
+using AudioSwitcher.AudioApi;
 using AudioSwitcher.AudioApi.CoreAudio;
-using Win32.Utils.Cd;
 
 namespace MP1_AudioSwitcher
 {
