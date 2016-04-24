@@ -52,7 +52,10 @@
             "Red",
             "Green",
             "Blue",
-            "Yellow"});
+            "Yellow",
+            "DVD menu",
+            "Sub page down",
+            "Sub page Up"});
       this.cbRemoteKey.Location = new System.Drawing.Point(202, 31);
       this.cbRemoteKey.Name = "cbRemoteKey";
       this.cbRemoteKey.Size = new System.Drawing.Size(118, 21);

@@ -107,9 +107,12 @@ namespace MP1_AudioSwitcher
     {
       // Remote Key to open Menu
       if ((action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_RED_BUTTON && Settings.RemoteKeyDialogContextMenu == 1) ||
-        (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_GREEN_BUTTON && Settings.RemoteKeyDialogContextMenu == 2) ||
+         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_GREEN_BUTTON && Settings.RemoteKeyDialogContextMenu == 2) ||
          (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_BLUE_BUTTON && Settings.RemoteKeyDialogContextMenu == 3) ||
-          (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_YELLOW_BUTTON &&Settings.RemoteKeyDialogContextMenu == 4))
+         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_YELLOW_BUTTON && Settings.RemoteKeyDialogContextMenu == 4) ||
+         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_DVD_MENU && Settings.RemoteKeyDialogContextMenu == 5) ||
+         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_SUBPAGE_DOWN && Settings.RemoteKeyDialogContextMenu == 6) ||
+         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_SUBPAGE_UP && Settings.RemoteKeyDialogContextMenu == 7))
       {
         DialogContextMenu();
       }
