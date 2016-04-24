@@ -192,7 +192,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>1</Major>
       <Minor>0</Minor>
-      <Build>0</Build>
+      <Build>1</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>Easily switch audio devices via context menu using a mapped remote key.</ExtensionDescription>
@@ -261,7 +261,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Resources\logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{99f64970-6f7e-43db-a962-90edb69f4a30}-logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{4fe318b2-fd87-47e6-9dd6-96bd53d15233}-logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

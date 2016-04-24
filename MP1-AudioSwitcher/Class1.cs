@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using AudioSwitcher.AudioApi;
 using MediaPortal.Configuration;
@@ -7,6 +8,7 @@ using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
 
 using AudioSwitcher.AudioApi.CoreAudio;
+using Win32.Utils.Cd;
 
 namespace MP1_AudioSwitcher
 {
@@ -120,7 +122,8 @@ namespace MP1_AudioSwitcher
 
       try
       {
-        devices = _ac.GetDevices();
+        Log.Debug("Audio Switcher - getting all playback devices");
+        devices = _ac.GetDevices(DeviceType.Playback, DeviceState.Active);
       }
       catch (Exception ex)
       {
@@ -135,6 +138,7 @@ namespace MP1_AudioSwitcher
     {
       try
       {
+        Log.Debug("Audio Switcher - setting default playback device to: " + device.FullName);
         _ac.SetDefaultDevice(device);
       }
       catch (Exception ex)
@@ -171,16 +175,13 @@ namespace MP1_AudioSwitcher
         {
           foreach (var device in GetPlaybackDevices())
           {
-            if (device.State != DeviceState.Disabled && device.State != DeviceState.NotPresent && 
-              device.State != DeviceState.Unplugged && device.IsPlaybackDevice)
-            {
+
               dlgSetPlaybackDevice.Add(device.FullName);
               if (device.IsDefaultDevice)
               {
                 dlgSetPlaybackDevice.SelectedLabel = i;
               }
               i++;
-            }
           }
         }
         else
@@ -195,13 +196,8 @@ namespace MP1_AudioSwitcher
           string selectedDevice = dlgSetPlaybackDevice.SelectedLabelText;
           if (selectedDevice != "No playback devices found!" && !string.IsNullOrEmpty(selectedDevice))
           {
-            foreach (var device in devices)
-            {
-              if (device.FullName == selectedDevice)
-              {
-                SetPlaybackDevice(device);
-              }
-            }
+            var device = devices.ElementAt(dlgSetPlaybackDevice.SelectedLabel);
+            SetPlaybackDevice(device);
           }
         }
       }
