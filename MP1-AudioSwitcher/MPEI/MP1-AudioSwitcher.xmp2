@@ -187,7 +187,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Id>158b1323-ef08-498b-8171-f5487c8702e0</Id>
     <Author>Rick164</Author>
     <HomePage />
-    <ForumPage>http://forum.team-mediaportal.com/threads/audio-switcher-quicky-change-audio-device-via-context-menu-using-remote-key.134209</ForumPage>
+    <ForumPage>http://forum.team-mediaportal.com/threads/audio-switcher-easily-change-audio-device-via-context-menu-using-remote-key.134209</ForumPage>
     <UpdateUrl />
     <Version>
       <Major>1</Major>
@@ -261,7 +261,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Resources\logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{1f14b5a0-a4ab-4d77-a84e-edb0ce7dd985}-logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{99f64970-6f7e-43db-a962-90edb69f4a30}-logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
