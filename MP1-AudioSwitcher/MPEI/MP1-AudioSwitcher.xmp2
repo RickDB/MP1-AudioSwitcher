@@ -188,7 +188,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Author>Rick164</Author>
     <HomePage />
     <ForumPage>http://forum.team-mediaportal.com/threads/audio-switcher-easily-change-audio-device-via-context-menu-using-remote-key.134209</ForumPage>
-    <UpdateUrl />
+    <UpdateUrl>https://raw.githubusercontent.com/RickDB/MP1-AudioSwitcher/master/MP1-AudioSwitcher/MPEI/MP1-AudioSwitcher_update.xml</UpdateUrl>
     <Version>
       <Major>1</Major>
       <Minor>0</Minor>
@@ -198,7 +198,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <ExtensionDescription>Easily switch audio devices via context menu using a mapped remote key.</ExtensionDescription>
     <VersionDescription />
     <DevelopmentStatus />
-    <OnlineLocation />
+    <OnlineLocation>https://raw.githubusercontent.com/RickDB/MP1-AudioSwitcher/master/MP1-AudioSwitcher/MPEI/Releases/AudioSwitcher_1.0.2.0.mpe1</OnlineLocation>
     <ReleaseDate>2015-09-06T15:08:24.0955112+02:00</ReleaseDate>
     <Tags />
     <Location>..\Release\[Name]_[Version].mpe1</Location>
@@ -269,6 +269,9 @@ Click Next to continue or Cancel to exit Setup.</Value>
   <ProjectSettings>
     <FolderGroups />
     <ProjectFilename>MP1-AudioSwitcher.xmp2</ProjectFilename>
+    <UpdatePath1>MP1-AudioSwitcher_update.xml</UpdatePath1>
+    <UpdatePath2 />
+    <UpdatePath3 />
   </ProjectSettings>
   <IsSkin>false</IsSkin>
 </PackageClass>
