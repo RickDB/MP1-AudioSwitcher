@@ -20,7 +20,19 @@ namespace MP1_AudioSwitcher
           new MediaPortal.Profile.Settings(
             MediaPortal.Configuration.Config.GetFile(MediaPortal.Configuration.Config.Dir.Config, "MediaPortal.xml")))
       {
-        RemoteKeyDialogContextMenu = reader.GetValueAsInt("VideoCleaner", "remoteKeyDialogContextMenu", 0);
+
+        // Load previously incorrectly set value if it exists and clear afterwards
+        int RemoteKeyDialogContextMenuOld = reader.GetValueAsInt("VideoCleaner", "remoteKeyDialogContextMenu", -1);
+
+        if (RemoteKeyDialogContextMenuOld != -1)
+        {
+          RemoteKeyDialogContextMenu = RemoteKeyDialogContextMenuOld;
+          reader.RemoveEntry("VideoCleaner", "remoteKeyDialogContextMenu");
+        }
+        else
+        {
+          RemoteKeyDialogContextMenu = reader.GetValueAsInt("AudioSwitcher", "remoteKeyDialogContextMenu", 0);
+        }
       }
     }
 
@@ -32,7 +44,7 @@ namespace MP1_AudioSwitcher
           new MediaPortal.Profile.Settings(
             MediaPortal.Configuration.Config.GetFile(MediaPortal.Configuration.Config.Dir.Config, "MediaPortal.xml")))
       {
-        reader.SetValue("VideoCleaner", "remoteKeyDialogContextMenu", RemoteKeyDialogContextMenu);
+        reader.SetValue("AudioSwitcher", "remoteKeyDialogContextMenu", RemoteKeyDialogContextMenu);
       }
     }
 
@@ -43,8 +55,8 @@ namespace MP1_AudioSwitcher
           new MediaPortal.Profile.Settings(
             MediaPortal.Configuration.Config.GetFile(MediaPortal.Configuration.Config.Dir.Config, "MediaPortal.xml")))
       {
-        value = reader.GetValueAsString("VideoCleaner", setting, "");
-        reader.SetValue("VideoCleaner", setting, value);
+        value = reader.GetValueAsString("AudioSwitcher", setting, "");
+        reader.SetValue("AudioSwitcher", setting, value);
       }
     }
 
@@ -55,7 +67,7 @@ namespace MP1_AudioSwitcher
           new MediaPortal.Profile.Settings(
             MediaPortal.Configuration.Config.GetFile(MediaPortal.Configuration.Config.Dir.Config, "MediaPortal.xml")))
       {
-        reader.SetValue("VideoCleaner", setting, value);
+        reader.SetValue("AudioSwitcher", setting, value);
       }
     }
   }

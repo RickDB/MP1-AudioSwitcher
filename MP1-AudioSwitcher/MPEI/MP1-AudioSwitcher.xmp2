@@ -192,13 +192,13 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>1</Major>
       <Minor>0</Minor>
-      <Build>2</Build>
+      <Build>3</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>Easily switch audio devices via context menu using a mapped remote key.</ExtensionDescription>
     <VersionDescription />
-    <DevelopmentStatus />
-    <OnlineLocation>https://raw.githubusercontent.com/RickDB/MP1-AudioSwitcher/master/MP1-AudioSwitcher/MPEI/Releases/AudioSwitcher_1.0.2.0.mpe1</OnlineLocation>
+    <DevelopmentStatus>Stable</DevelopmentStatus>
+    <OnlineLocation>https://raw.githubusercontent.com/RickDB/MP1-AudioSwitcher/master/MP1-AudioSwitcher/MPEI/Releases/AudioSwitcher_1.0.3.0.mpe1</OnlineLocation>
     <ReleaseDate>2015-09-06T15:08:24.0955112+02:00</ReleaseDate>
     <Tags />
     <Location>..\Release\[Name]_[Version].mpe1</Location>
