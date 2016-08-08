@@ -55,6 +55,7 @@
       this.lblDevice = new System.Windows.Forms.Label();
       this.btnCheckAllBitstreamOptions = new System.Windows.Forms.Button();
       this.btnCheckNoBitstreamOptions = new System.Windows.Forms.Button();
+      this.chkAlwaysShowLavBitstreamToggle = new System.Windows.Forms.CheckBox();
       this.tabControl.SuspendLayout();
       this.tabPageGeneric.SuspendLayout();
       this.tabPageBitStream.SuspendLayout();
@@ -89,7 +90,7 @@
       // 
       // btnSaveSettings
       // 
-      this.btnSaveSettings.Location = new System.Drawing.Point(215, 449);
+      this.btnSaveSettings.Location = new System.Drawing.Point(258, 449);
       this.btnSaveSettings.Name = "btnSaveSettings";
       this.btnSaveSettings.Size = new System.Drawing.Size(314, 32);
       this.btnSaveSettings.TabIndex = 2;
@@ -107,7 +108,7 @@
       // chkEnableLAVbitstreamPerDevice
       // 
       this.chkEnableLAVbitstreamPerDevice.AutoSize = true;
-      this.chkEnableLAVbitstreamPerDevice.Location = new System.Drawing.Point(9, 109);
+      this.chkEnableLAVbitstreamPerDevice.Location = new System.Drawing.Point(9, 107);
       this.chkEnableLAVbitstreamPerDevice.Name = "chkEnableLAVbitstreamPerDevice";
       this.chkEnableLAVbitstreamPerDevice.Size = new System.Drawing.Size(228, 17);
       this.chkEnableLAVbitstreamPerDevice.TabIndex = 1;
@@ -130,7 +131,7 @@
       this.tabControl.Location = new System.Drawing.Point(0, 3);
       this.tabControl.Name = "tabControl";
       this.tabControl.SelectedIndex = 0;
-      this.tabControl.Size = new System.Drawing.Size(825, 440);
+      this.tabControl.Size = new System.Drawing.Size(838, 440);
       this.tabControl.TabIndex = 4;
       // 
       // tabPageGeneric
@@ -188,6 +189,7 @@
       // tabPageBitStream
       // 
       this.tabPageBitStream.BackColor = System.Drawing.SystemColors.Control;
+      this.tabPageBitStream.Controls.Add(this.chkAlwaysShowLavBitstreamToggle);
       this.tabPageBitStream.Controls.Add(this.btnCheckNoBitstreamOptions);
       this.tabPageBitStream.Controls.Add(this.btnCheckAllBitstreamOptions);
       this.tabPageBitStream.Controls.Add(this.btnRefreshDevices);
@@ -204,7 +206,7 @@
       this.tabPageBitStream.Location = new System.Drawing.Point(4, 22);
       this.tabPageBitStream.Name = "tabPageBitStream";
       this.tabPageBitStream.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPageBitStream.Size = new System.Drawing.Size(817, 414);
+      this.tabPageBitStream.Size = new System.Drawing.Size(830, 414);
       this.tabPageBitStream.TabIndex = 1;
       this.tabPageBitStream.Text = "Bitstream";
       // 
@@ -248,9 +250,9 @@
       this.lblSupportedBitstreamOptions.AutoSize = true;
       this.lblSupportedBitstreamOptions.Location = new System.Drawing.Point(6, 233);
       this.lblSupportedBitstreamOptions.Name = "lblSupportedBitstreamOptions";
-      this.lblSupportedBitstreamOptions.Size = new System.Drawing.Size(138, 13);
+      this.lblSupportedBitstreamOptions.Size = new System.Drawing.Size(141, 13);
       this.lblSupportedBitstreamOptions.TabIndex = 8;
-      this.lblSupportedBitstreamOptions.Text = "Suppoted bitstream options:";
+      this.lblSupportedBitstreamOptions.Text = "Supported bitstream options:";
       this.lblSupportedBitstreamOptions.Visible = false;
       // 
       // lvBitstreamDevices
@@ -261,7 +263,7 @@
             this.cbhBitstreamOptions});
       this.lvBitstreamDevices.Location = new System.Drawing.Point(281, 109);
       this.lvBitstreamDevices.Name = "lvBitstreamDevices";
-      this.lvBitstreamDevices.Size = new System.Drawing.Size(530, 261);
+      this.lvBitstreamDevices.Size = new System.Drawing.Size(546, 261);
       this.lvBitstreamDevices.TabIndex = 6;
       this.lvBitstreamDevices.UseCompatibleStateImageBehavior = false;
       this.lvBitstreamDevices.View = System.Windows.Forms.View.Details;
@@ -305,7 +307,7 @@
       // lblDevice
       // 
       this.lblDevice.AutoSize = true;
-      this.lblDevice.Location = new System.Drawing.Point(6, 150);
+      this.lblDevice.Location = new System.Drawing.Point(3, 154);
       this.lblDevice.Name = "lblDevice";
       this.lblDevice.Size = new System.Drawing.Size(69, 13);
       this.lblDevice.TabIndex = 3;
@@ -333,11 +335,21 @@
       this.btnCheckNoBitstreamOptions.Visible = false;
       this.btnCheckNoBitstreamOptions.Click += new System.EventHandler(this.btnCheckNoBitstreamOptions_Click);
       // 
+      // chkAlwaysShowLavBitstreamToggle
+      // 
+      this.chkAlwaysShowLavBitstreamToggle.AutoSize = true;
+      this.chkAlwaysShowLavBitstreamToggle.Location = new System.Drawing.Point(8, 130);
+      this.chkAlwaysShowLavBitstreamToggle.Name = "chkAlwaysShowLavBitstreamToggle";
+      this.chkAlwaysShowLavBitstreamToggle.Size = new System.Drawing.Size(265, 17);
+      this.chkAlwaysShowLavBitstreamToggle.TabIndex = 14;
+      this.chkAlwaysShowLavBitstreamToggle.Text = "Always show LAV bitstream toggle in context menu";
+      this.chkAlwaysShowLavBitstreamToggle.UseVisualStyleBackColor = true;
+      // 
       // SetupForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(827, 493);
+      this.ClientSize = new System.Drawing.Size(839, 493);
       this.Controls.Add(this.tabControl);
       this.Controls.Add(this.btnSaveSettings);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -382,5 +394,6 @@
     private System.Windows.Forms.Button btnClearDevice;
     private System.Windows.Forms.Button btnCheckAllBitstreamOptions;
     private System.Windows.Forms.Button btnCheckNoBitstreamOptions;
+    private System.Windows.Forms.CheckBox chkAlwaysShowLavBitstreamToggle;
   }
 }

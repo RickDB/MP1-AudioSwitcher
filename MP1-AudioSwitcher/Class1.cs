@@ -18,6 +18,7 @@ namespace MP1_AudioSwitcher
   {
 
     private CoreAudioController _ac;
+    private bool _bitstreamEnabled;
 
     // With GetID it will be an window-plugin / otherwise a process-plugin
     // Enter the id number here again
@@ -168,10 +169,11 @@ namespace MP1_AudioSwitcher
               string deviceName = splitDevice[0];
               string bitStreamEnabled = splitDevice[1];
               string bitStreamOptions = splitDevice[2];
+              _bitstreamEnabled = bool.Parse(bitStreamEnabled);
 
               if (deviceName == currentDeviceName)
               {
-                ToggleLAVBitstreaming(bool.Parse(bitStreamEnabled), bitStreamOptions);
+                ToggleLAVBitstreaming(_bitstreamEnabled, bitStreamOptions);
               }
             }
           }
@@ -257,6 +259,13 @@ namespace MP1_AudioSwitcher
       dlg.SetHeading("Audio switcher");
 
       dlg.Add(new GUIListItem("Change playback device"));
+      if (Settings.LAVbitstreamPerDevice || Settings.LAVbitstreamAlwaysShowToggleInContextMenu)
+      {
+        dlg.Add(_bitstreamEnabled
+          ? new GUIListItem("Disable LAV bitstreaming")
+          : new GUIListItem("Enable LAV bitstreaming"));
+      }
+
 
       dlg.SelectedLabel = 0;
       dlg.DoModal(GUIWindowManager.ActiveWindow);
@@ -301,9 +310,20 @@ namespace MP1_AudioSwitcher
           }
         }
       }
+      if (dlg.SelectedLabelText == "Enable LAV bitstreaming")
+      {
+        ToggleLAVBitstreaming(true, "", true);
+        _bitstreamEnabled = true;
+      }
+
+      if (dlg.SelectedLabelText == "Disable LAV bitstreaming")
+      {
+        ToggleLAVBitstreaming(false,"", true);
+        _bitstreamEnabled = false;
+      }
     }
 
-    public static void ToggleLAVBitstreaming(bool enable, string bitstreamOptions)
+    public static void ToggleLAVBitstreaming(bool enable, string bitstreamOptions, bool forced = false)
     {
       try
       {
@@ -313,42 +333,54 @@ namespace MP1_AudioSwitcher
         {
           if (enable)
           {
-            List<string> bitstreamOptionsList = new List<string>();
-            if (bitstreamOptions.Contains(","))
+            if (forced)
             {
-              bitstreamOptionsList = bitstreamOptions.Split(',').ToList();
+              Log.Debug("Enabling LAV bitstreaming (forced)");
+              myKey.SetValue("Bitstreaming_ac3", "1", RegistryValueKind.DWord);
+              myKey.SetValue("Bitstreaming_dts", "1", RegistryValueKind.DWord);
+              myKey.SetValue("Bitstreaming_dtshd", "1", RegistryValueKind.DWord);
+              myKey.SetValue("Bitstreaming_eac3", "1", RegistryValueKind.DWord);
+              myKey.SetValue("Bitstreaming_truehd", "1", RegistryValueKind.DWord);
             }
             else
             {
-              bitstreamOptionsList.Add(bitstreamOptions);
-            }
-
-            Log.Debug("Enabling LAV bitstreaming");
-            foreach (var bitstreamCodec in bitstreamOptionsList)
-            {
-              switch (bitstreamCodec)
+              List<string> bitstreamOptionsList = new List<string>();
+              if (bitstreamOptions.Contains(","))
               {
-                case "AC3":
-                  myKey.SetValue("Bitstreaming_ac3", "1", RegistryValueKind.DWord);
-                  break;
-                case "DTS":
-                  myKey.SetValue("Bitstreaming_dts", "1", RegistryValueKind.DWord);
-                  break;
-                case "DTS HD":
-                  myKey.SetValue("Bitstreaming_dtshd", "1", RegistryValueKind.DWord);
-                  break;
-                case "EAC3":
-                  myKey.SetValue("Bitstreaming_eac3", "1", RegistryValueKind.DWord);
-                  break;
-                case "TRUE HD":
-                  myKey.SetValue("Bitstreaming_truehd", "1", RegistryValueKind.DWord);
-                  break;
+                bitstreamOptionsList = bitstreamOptions.Split(',').ToList();
+              }
+              else
+              {
+                bitstreamOptionsList.Add(bitstreamOptions);
+              }
+
+              Log.Debug("Enabling LAV bitstreaming");
+              foreach (var bitstreamCodec in bitstreamOptionsList)
+              {
+                switch (bitstreamCodec)
+                {
+                  case "AC3":
+                    myKey.SetValue("Bitstreaming_ac3", "1", RegistryValueKind.DWord);
+                    break;
+                  case "DTS":
+                    myKey.SetValue("Bitstreaming_dts", "1", RegistryValueKind.DWord);
+                    break;
+                  case "DTS HD":
+                    myKey.SetValue("Bitstreaming_dtshd", "1", RegistryValueKind.DWord);
+                    break;
+                  case "EAC3":
+                    myKey.SetValue("Bitstreaming_eac3", "1", RegistryValueKind.DWord);
+                    break;
+                  case "TRUE HD":
+                    myKey.SetValue("Bitstreaming_truehd", "1", RegistryValueKind.DWord);
+                    break;
+                }
               }
             }
           }
           else
           {
-            Log.Debug("Disabling LAV bitstreaming");
+            Log.Debug(forced ? "Disabling LAV bitstreaming (forced)" : "Disabling LAV bitstreaming");
 
             myKey.SetValue("Bitstreaming_ac3", "0", RegistryValueKind.DWord);
             myKey.SetValue("Bitstreaming_dts", "0", RegistryValueKind.DWord);

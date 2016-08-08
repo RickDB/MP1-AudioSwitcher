@@ -59,6 +59,8 @@ namespace MP1_AudioSwitcher
     {
       cbRemoteKey.SelectedIndex = Settings.RemoteKeyDialogContextMenu;
       cbStartupPlaybackDevices.Text = Settings.DefaultPlaybackDevice;
+      chkAlwaysShowLavBitstreamToggle.Checked = Settings.LAVbitstreamAlwaysShowToggleInContextMenu;
+
       chkEnableLAVbitstreamPerDevice.Checked = Settings.LAVbitstreamPerDevice;
       LoadKnownDevices();
 
@@ -116,6 +118,7 @@ namespace MP1_AudioSwitcher
       {
         Settings.RemoteKeyDialogContextMenu = cbRemoteKey.SelectedIndex;
         Settings.DefaultPlaybackDevice = cbStartupPlaybackDevices.Text;
+        Settings.LAVbitstreamAlwaysShowToggleInContextMenu = chkAlwaysShowLavBitstreamToggle.Checked;
         Settings.LAVbitstreamPerDevice = chkEnableLAVbitstreamPerDevice.Checked;
 
         string formatedBitStreamPropertiesList = "";

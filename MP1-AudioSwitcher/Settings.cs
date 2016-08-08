@@ -15,6 +15,7 @@ namespace MP1_AudioSwitcher
     public static string DefaultPlaybackDevice;
 
     // Bitstream options
+    public static bool LAVbitstreamAlwaysShowToggleInContextMenu;
     public static bool LAVbitstreamPerDevice;
     public static string LAVbitstreamPropertyList;
 
@@ -45,6 +46,7 @@ namespace MP1_AudioSwitcher
 
         DefaultPlaybackDevice = reader.GetValueAsString("AudioSwitcher", "defaultPlaybackDevice", "");
 
+        LAVbitstreamAlwaysShowToggleInContextMenu = reader.GetValueAsBool("AudioSwitcher", "LAVbitstreamAlwaysShowToggleInContextMenu", false);
         LAVbitstreamPerDevice = reader.GetValueAsBool("AudioSwitcher", "LAVbitstreamPerDevice", false);
         LAVbitstreamPropertyList = reader.GetValueAsString("AudioSwitcher", "LAVbitstreamPropertyList", "");
       }
@@ -60,6 +62,7 @@ namespace MP1_AudioSwitcher
       {
         reader.SetValue("AudioSwitcher", "remoteKeyDialogContextMenu", RemoteKeyDialogContextMenu);
         reader.SetValue("AudioSwitcher", "defaultPlaybackDevice", DefaultPlaybackDevice);
+        reader.SetValueAsBool("AudioSwitcher", "LAVbitstreamAlwaysShowToggleInContextMenu", LAVbitstreamAlwaysShowToggleInContextMenu);
         reader.SetValueAsBool("AudioSwitcher", "LAVbitstreamPerDevice", LAVbitstreamPerDevice);
         reader.SetValue("AudioSwitcher", "LAVbitstreamPropertyList", LAVbitstreamPropertyList);
       }

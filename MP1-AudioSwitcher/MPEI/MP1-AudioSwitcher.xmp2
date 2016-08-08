@@ -164,7 +164,23 @@ Click Next to continue or Cancel to exit Setup.</Value>
     </Items>
   </Dependencies>
   <PluginDependencies>
-    <Items />
+    <Items>
+      <PluginDependencyItem AssemblyName="MP1-AudioSwitcher.dll">
+        <CompatibleVersion>
+          <Items>
+            <CompatibleVersionItem>
+              <MinRequiredVersion>1.1.6.27652</MinRequiredVersion>
+              <DesignedForVersion>1.1.6.27652</DesignedForVersion>
+            </CompatibleVersionItem>
+          </Items>
+        </CompatibleVersion>
+        <SubSystemsUsed>
+          <Items>
+            <SubSystemItem Name="MP.Config" />
+          </Items>
+        </SubSystemsUsed>
+      </PluginDependencyItem>
+    </Items>
   </PluginDependencies>
   <GeneralInfo>
     <Name>AudioSwitcher</Name>
@@ -245,7 +261,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Resources\logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{3e3c16ab-c7c3-41ae-954a-107fdb5a9630}-logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{5f8c38be-3f43-443f-bb13-2cf0facbce04}-logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
