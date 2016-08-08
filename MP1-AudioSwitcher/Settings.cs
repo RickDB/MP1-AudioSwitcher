@@ -11,6 +11,13 @@ namespace MP1_AudioSwitcher
     // Remote settings
     public static int RemoteKeyDialogContextMenu;
 
+    // Default playback device
+    public static string DefaultPlaybackDevice;
+
+    // Bitstream options
+    public static bool LAVbitstreamPerDevice;
+    public static string LAVbitstreamPropertyList;
+
     #endregion
 
     public static void LoadSettings()
@@ -33,6 +40,13 @@ namespace MP1_AudioSwitcher
         {
           RemoteKeyDialogContextMenu = reader.GetValueAsInt("AudioSwitcher", "remoteKeyDialogContextMenu", 0);
         }
+
+        RemoteKeyDialogContextMenu = reader.GetValueAsInt("AudioSwitcher", "remoteKeyDialogContextMenu", 0);
+
+        DefaultPlaybackDevice = reader.GetValueAsString("AudioSwitcher", "defaultPlaybackDevice", "");
+
+        LAVbitstreamPerDevice = reader.GetValueAsBool("AudioSwitcher", "LAVbitstreamPerDevice", false);
+        LAVbitstreamPropertyList = reader.GetValueAsString("AudioSwitcher", "LAVbitstreamPropertyList", "");
       }
     }
 
@@ -45,6 +59,9 @@ namespace MP1_AudioSwitcher
             MediaPortal.Configuration.Config.GetFile(MediaPortal.Configuration.Config.Dir.Config, "MediaPortal.xml")))
       {
         reader.SetValue("AudioSwitcher", "remoteKeyDialogContextMenu", RemoteKeyDialogContextMenu);
+        reader.SetValue("AudioSwitcher", "defaultPlaybackDevice", DefaultPlaybackDevice);
+        reader.SetValueAsBool("AudioSwitcher", "LAVbitstreamPerDevice", LAVbitstreamPerDevice);
+        reader.SetValue("AudioSwitcher", "LAVbitstreamPropertyList", LAVbitstreamPropertyList);
       }
     }
 

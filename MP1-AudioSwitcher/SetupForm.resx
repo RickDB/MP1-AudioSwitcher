@@ -117,6 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblBitstreamingHint.Text" xml:space="preserve">
+    <value>These settings allow you to automatically toggle LAV bitstreaming on / off for specific audio devices (setup below).
+
+On Mediaportal startup it will check current audio device and match that to apply bitstreaming setting, 
+this also applies on selecting a different audio device from context menu.
+
+Make sure to add all your devices here when enabling this setting as otherwise on startup it will remain at the last know LAV bitstreaming setting.</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

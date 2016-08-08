@@ -8,6 +8,7 @@ using MediaPortal.GUI.Library;
 
 using AudioSwitcher.AudioApi;
 using AudioSwitcher.AudioApi.CoreAudio;
+using Microsoft.Win32;
 
 namespace MP1_AudioSwitcher
 {
@@ -100,7 +101,101 @@ namespace MP1_AudioSwitcher
       GUIWindowManager.OnNewAction += new OnActionHandler(OnNewAction);
       Settings.LoadSettings();
 
+      IEnumerable<CoreAudioDevice> devices = GetPlaybackDevices();
+
+      if (!string.IsNullOrEmpty(Settings.DefaultPlaybackDevice))
+      {
+        Log.Debug("Setting default playback device on startup: " + Settings.DefaultPlaybackDevice);
+        if (devices != null)
+        {
+          foreach (var device in devices)
+          {
+            if (device.FullName == Settings.DefaultPlaybackDevice && !device.IsDefaultDevice)
+            {
+              SetPlaybackDevice(device);
+            }
+            else if (device.IsDefaultDevice && Settings.LAVbitstreamPerDevice)
+            {
+              SetLavBitstreamSettings(device.FullName);
+            }
+          }
+        }
+        else
+        {
+         Log.Error("No playback devices found!");
+        }
+      }
+      else if (Settings.LAVbitstreamPerDevice)
+      {
+        // Get current device
+        string currentDeviceName = "";
+        if (devices != null)
+        {
+          foreach (var device in devices)
+          {
+            if (device.IsDefaultDevice)
+            {
+              currentDeviceName = device.FullName;
+            }
+          }
+
+          if (!string.IsNullOrEmpty(currentDeviceName))
+          {
+            SetLavBitstreamSettings(currentDeviceName);
+          }
+        }
+        else
+        {
+         Log.Error("No playback devices found!");
+        }
+      }
+
       return true;
+    }
+
+    public void SetLavBitstreamSettings(string currentDeviceName)
+    {
+      try
+      {
+        if (!string.IsNullOrEmpty(Settings.LAVbitstreamPropertyList))
+        {
+          if (Settings.LAVbitstreamPropertyList.Contains("|"))
+          {
+            var splitDevices = Settings.LAVbitstreamPropertyList.Split('|');
+            foreach (var device in splitDevices)
+            {
+              var splitDevice = device.Split('^');
+              string deviceName = splitDevice[0];
+              string bitStreamEnabled = splitDevice[1];
+              string bitStreamOptions = splitDevice[2];
+
+              if (deviceName == currentDeviceName)
+              {
+                ToggleLAVBitstreaming(bool.Parse(bitStreamEnabled), bitStreamOptions);
+              }
+            }
+          }
+          else
+          {
+            var splitDevice = Settings.LAVbitstreamPropertyList.Split('^');
+
+            string deviceName = splitDevice[0];
+            string bitStreamEnabled = splitDevice[1];
+            string bitStreamOptions = splitDevice[2];
+
+            if (deviceName == currentDeviceName)
+            {
+              ToggleLAVBitstreaming(bool.Parse(bitStreamEnabled), bitStreamOptions);
+            }
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error occured during SetLavBitstreamSettings()");
+        Log.Error(ex.Message);
+      }
+
     }
 
     public void OnNewAction(MediaPortal.GUI.Library.Action action)
@@ -142,6 +237,10 @@ namespace MP1_AudioSwitcher
       {
         Log.Debug("Audio Switcher - setting default playback device to: " + device.FullName);
         _ac.SetDefaultDevice(device);
+        if (Settings.LAVbitstreamPerDevice)
+        {
+          SetLavBitstreamSettings(device.FullName);
+        }
       }
       catch (Exception ex)
       {
@@ -177,7 +276,6 @@ namespace MP1_AudioSwitcher
         {
           foreach (var device in devices)
           {
-
               dlgSetPlaybackDevice.Add(device.FullName);
               if (device.IsDefaultDevice)
               {
@@ -202,6 +300,74 @@ namespace MP1_AudioSwitcher
             SetPlaybackDevice(device);
           }
         }
+      }
+    }
+
+    public static void ToggleLAVBitstreaming(bool enable, string bitstreamOptions)
+    {
+      try
+      {
+        var myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\LAV\\Audio", true);
+
+        if (myKey != null)
+        {
+          if (enable)
+          {
+            List<string> bitstreamOptionsList = new List<string>();
+            if (bitstreamOptions.Contains(","))
+            {
+              bitstreamOptionsList = bitstreamOptions.Split(',').ToList();
+            }
+            else
+            {
+              bitstreamOptionsList.Add(bitstreamOptions);
+            }
+
+            Log.Debug("Enabling LAV bitstreaming");
+            foreach (var bitstreamCodec in bitstreamOptionsList)
+            {
+              switch (bitstreamCodec)
+              {
+                case "AC3":
+                  myKey.SetValue("Bitstreaming_ac3", "1", RegistryValueKind.DWord);
+                  break;
+                case "DTS":
+                  myKey.SetValue("Bitstreaming_dts", "1", RegistryValueKind.DWord);
+                  break;
+                case "DTS HD":
+                  myKey.SetValue("Bitstreaming_dtshd", "1", RegistryValueKind.DWord);
+                  break;
+                case "EAC3":
+                  myKey.SetValue("Bitstreaming_eac3", "1", RegistryValueKind.DWord);
+                  break;
+                case "TRUE HD":
+                  myKey.SetValue("Bitstreaming_truehd", "1", RegistryValueKind.DWord);
+                  break;
+              }
+            }
+          }
+          else
+          {
+            Log.Debug("Disabling LAV bitstreaming");
+
+            myKey.SetValue("Bitstreaming_ac3", "0", RegistryValueKind.DWord);
+            myKey.SetValue("Bitstreaming_dts", "0", RegistryValueKind.DWord);
+            myKey.SetValue("Bitstreaming_dtshd", "0", RegistryValueKind.DWord);
+            myKey.SetValue("Bitstreaming_eac3", "0", RegistryValueKind.DWord);
+            myKey.SetValue("Bitstreaming_truehd", "0", RegistryValueKind.DWord);
+          }
+        }
+        else
+        {
+          Log.Debug("LAV main registry key not found");
+        }
+
+        myKey.Close();
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error occured during ToggleLAVBitstreaming()");
+        Log.Error(ex.Message);
       }
     }
   }
