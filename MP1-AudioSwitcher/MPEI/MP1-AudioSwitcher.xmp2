@@ -192,13 +192,13 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Version>
       <Major>1</Major>
       <Minor>1</Minor>
-      <Build>0</Build>
+      <Build>1</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>Easily switch audio devices via context menu using a mapped remote key.</ExtensionDescription>
     <VersionDescription />
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>https://raw.githubusercontent.com/RickDB/MP1-AudioSwitcher/master/MP1-AudioSwitcher/MPEI/Releases/AudioSwitcher_1.1.0.0.mpe1</OnlineLocation>
+    <OnlineLocation>https://raw.githubusercontent.com/RickDB/MP1-AudioSwitcher/master/MP1-AudioSwitcher/MPEI/Releases/AudioSwitcher_1.1.1.0.mpe1</OnlineLocation>
     <ReleaseDate>2015-09-06T15:08:24.0955112+02:00</ReleaseDate>
     <Tags />
     <Location>..\Release\[Name]_[Version].mpe1</Location>
@@ -261,7 +261,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Resources\logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{5f8c38be-3f43-443f-bb13-2cf0facbce04}-logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{91c68608-1d7b-4693-aeed-9065b6fee9ca}-logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

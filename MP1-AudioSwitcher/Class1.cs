@@ -18,7 +18,7 @@ namespace MP1_AudioSwitcher
   {
 
     private CoreAudioController _ac;
-    private bool _bitstreamEnabled;
+    private static bool _bitstreamEnabled;
 
     // With GetID it will be an window-plugin / otherwise a process-plugin
     // Enter the id number here again
@@ -169,11 +169,10 @@ namespace MP1_AudioSwitcher
               string deviceName = splitDevice[0];
               string bitStreamEnabled = splitDevice[1];
               string bitStreamOptions = splitDevice[2];
-              _bitstreamEnabled = bool.Parse(bitStreamEnabled);
 
               if (deviceName == currentDeviceName)
               {
-                ToggleLAVBitstreaming(_bitstreamEnabled, bitStreamOptions);
+                ToggleLAVBitstreaming(bool.Parse(bitStreamEnabled), bitStreamOptions);
               }
             }
           }
@@ -313,13 +312,11 @@ namespace MP1_AudioSwitcher
       if (dlg.SelectedLabelText == "Enable LAV bitstreaming")
       {
         ToggleLAVBitstreaming(true, "", true);
-        _bitstreamEnabled = true;
       }
 
       if (dlg.SelectedLabelText == "Disable LAV bitstreaming")
       {
         ToggleLAVBitstreaming(false,"", true);
-        _bitstreamEnabled = false;
       }
     }
 
@@ -328,6 +325,7 @@ namespace MP1_AudioSwitcher
       try
       {
         var myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\LAV\\Audio", true);
+        _bitstreamEnabled = enable;
 
         if (myKey != null)
         {
