@@ -222,7 +222,7 @@
       // 
       // btnRemoveDevice
       // 
-      this.btnRemoveDevice.Location = new System.Drawing.Point(699, 376);
+      this.btnRemoveDevice.Location = new System.Drawing.Point(715, 376);
       this.btnRemoveDevice.Name = "btnRemoveDevice";
       this.btnRemoveDevice.Size = new System.Drawing.Size(112, 23);
       this.btnRemoveDevice.TabIndex = 10;
@@ -261,9 +261,9 @@
             this.chDeviceName,
             this.chBitstream,
             this.cbhBitstreamOptions});
-      this.lvBitstreamDevices.Location = new System.Drawing.Point(281, 109);
+      this.lvBitstreamDevices.Location = new System.Drawing.Point(294, 109);
       this.lvBitstreamDevices.Name = "lvBitstreamDevices";
-      this.lvBitstreamDevices.Size = new System.Drawing.Size(546, 261);
+      this.lvBitstreamDevices.Size = new System.Drawing.Size(533, 261);
       this.lvBitstreamDevices.TabIndex = 6;
       this.lvBitstreamDevices.UseCompatibleStateImageBehavior = false;
       this.lvBitstreamDevices.View = System.Windows.Forms.View.Details;
