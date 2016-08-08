@@ -100,7 +100,7 @@
       // 
       // cbAvailableAudioDevices
       // 
-      this.cbAvailableAudioDevices.Location = new System.Drawing.Point(3, 173);
+      this.cbAvailableAudioDevices.Location = new System.Drawing.Point(8, 173);
       this.cbAvailableAudioDevices.Name = "cbAvailableAudioDevices";
       this.cbAvailableAudioDevices.Size = new System.Drawing.Size(270, 21);
       this.cbAvailableAudioDevices.TabIndex = 0;
@@ -296,7 +296,7 @@
       // cbBitstreamDeviceEnabled
       // 
       this.cbBitstreamDeviceEnabled.AutoSize = true;
-      this.cbBitstreamDeviceEnabled.Location = new System.Drawing.Point(9, 208);
+      this.cbBitstreamDeviceEnabled.Location = new System.Drawing.Point(9, 200);
       this.cbBitstreamDeviceEnabled.Name = "cbBitstreamDeviceEnabled";
       this.cbBitstreamDeviceEnabled.Size = new System.Drawing.Size(69, 17);
       this.cbBitstreamDeviceEnabled.TabIndex = 4;
@@ -307,7 +307,7 @@
       // lblDevice
       // 
       this.lblDevice.AutoSize = true;
-      this.lblDevice.Location = new System.Drawing.Point(3, 154);
+      this.lblDevice.Location = new System.Drawing.Point(8, 153);
       this.lblDevice.Name = "lblDevice";
       this.lblDevice.Size = new System.Drawing.Size(69, 13);
       this.lblDevice.TabIndex = 3;
