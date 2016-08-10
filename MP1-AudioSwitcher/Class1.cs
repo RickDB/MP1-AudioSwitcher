@@ -217,11 +217,30 @@ namespace MP1_AudioSwitcher
     private IEnumerable<CoreAudioDevice> GetPlaybackDevices()
     {
       IEnumerable<CoreAudioDevice> devices = null;
+      bool reInitCoreAudioController = false;
 
       try
       {
         Log.Debug("Audio Switcher - getting all playback devices");
+
         devices = _ac.GetDevices(DeviceType.Playback, DeviceState.Active);
+
+        // Check for UNKNOWN devices and re-init CoreAudioControler if needed (AudioSwitcher API bug)
+        foreach (var device in devices.Where(device => device.FullName.ToLower().Contains("unknown")))
+        {
+          Log.Debug("Found unknown device during GetPlaybackDevices(), gonna re-init CoreAudioControler and update list");
+          Log.Debug("Device ID: " + device.Id);
+          reInitCoreAudioController = true;
+        }
+
+        if (reInitCoreAudioController)
+        {
+          _ac = null;
+          devices = null;
+          _ac = new CoreAudioController();
+          devices = _ac.GetDevices(DeviceType.Playback, DeviceState.Active);
+        }
+
       }
       catch (Exception ex)
       {
