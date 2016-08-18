@@ -648,7 +648,7 @@ namespace MP1_AudioSwitcher
         {
           dlgYesNo.SetHeading(enableDelay ? "Restart playback with new delay?" : "Restart playback with delay disabled?");
           dlgYesNo.SetLine(1, g_Player.currentFileName);
-          dlgYesNo.SetLine(2, "Will resume at position (s): " + resumePosition);
+          dlgYesNo.SetLine(2, "Will resume at: " +TimeSpan.FromSeconds(resumePosition).ToString(@"hh\:mm\:ss"));
 
           if (enableDelay)
           {
