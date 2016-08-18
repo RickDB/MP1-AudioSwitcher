@@ -42,6 +42,9 @@
       this.cbStartupPlaybackDevices = new System.Windows.Forms.ComboBox();
       this.lblDefaultPlaybackDevice = new System.Windows.Forms.Label();
       this.tabPageBitStream = new System.Windows.Forms.TabPage();
+      this.chkAlwaysShowLavBitstreamToggle = new System.Windows.Forms.CheckBox();
+      this.btnCheckNoBitstreamOptions = new System.Windows.Forms.Button();
+      this.btnCheckAllBitstreamOptions = new System.Windows.Forms.Button();
       this.btnRefreshDevices = new System.Windows.Forms.Button();
       this.btnRemoveDevice = new System.Windows.Forms.Button();
       this.cblSupportedBitstreamOptions = new System.Windows.Forms.CheckedListBox();
@@ -53,9 +56,7 @@
       this.btnAddDevice = new System.Windows.Forms.Button();
       this.cbBitstreamDeviceEnabled = new System.Windows.Forms.CheckBox();
       this.lblDevice = new System.Windows.Forms.Label();
-      this.btnCheckAllBitstreamOptions = new System.Windows.Forms.Button();
-      this.btnCheckNoBitstreamOptions = new System.Windows.Forms.Button();
-      this.chkAlwaysShowLavBitstreamToggle = new System.Windows.Forms.CheckBox();
+      this.chkEnableLavAudioDelayControl = new System.Windows.Forms.CheckBox();
       this.tabControl.SuspendLayout();
       this.tabPageGeneric.SuspendLayout();
       this.tabPageBitStream.SuspendLayout();
@@ -137,6 +138,7 @@
       // tabPageGeneric
       // 
       this.tabPageGeneric.BackColor = System.Drawing.SystemColors.Control;
+      this.tabPageGeneric.Controls.Add(this.chkEnableLavAudioDelayControl);
       this.tabPageGeneric.Controls.Add(this.btnClearDevice);
       this.tabPageGeneric.Controls.Add(this.btbRefreshDefaultPlaybackDevices);
       this.tabPageGeneric.Controls.Add(this.cbStartupPlaybackDevices);
@@ -146,7 +148,7 @@
       this.tabPageGeneric.Location = new System.Drawing.Point(4, 22);
       this.tabPageGeneric.Name = "tabPageGeneric";
       this.tabPageGeneric.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPageGeneric.Size = new System.Drawing.Size(817, 414);
+      this.tabPageGeneric.Size = new System.Drawing.Size(830, 414);
       this.tabPageGeneric.TabIndex = 0;
       this.tabPageGeneric.Text = "Generic";
       // 
@@ -210,11 +212,43 @@
       this.tabPageBitStream.TabIndex = 1;
       this.tabPageBitStream.Text = "Bitstream";
       // 
+      // chkAlwaysShowLavBitstreamToggle
+      // 
+      this.chkAlwaysShowLavBitstreamToggle.AutoSize = true;
+      this.chkAlwaysShowLavBitstreamToggle.Location = new System.Drawing.Point(8, 130);
+      this.chkAlwaysShowLavBitstreamToggle.Name = "chkAlwaysShowLavBitstreamToggle";
+      this.chkAlwaysShowLavBitstreamToggle.Size = new System.Drawing.Size(265, 17);
+      this.chkAlwaysShowLavBitstreamToggle.TabIndex = 14;
+      this.chkAlwaysShowLavBitstreamToggle.Text = "Always show LAV bitstream toggle in context menu";
+      this.chkAlwaysShowLavBitstreamToggle.UseVisualStyleBackColor = true;
+      // 
+      // btnCheckNoBitstreamOptions
+      // 
+      this.btnCheckNoBitstreamOptions.Location = new System.Drawing.Point(220, 347);
+      this.btnCheckNoBitstreamOptions.Name = "btnCheckNoBitstreamOptions";
+      this.btnCheckNoBitstreamOptions.Size = new System.Drawing.Size(55, 23);
+      this.btnCheckNoBitstreamOptions.TabIndex = 13;
+      this.btnCheckNoBitstreamOptions.Text = "None";
+      this.btnCheckNoBitstreamOptions.UseVisualStyleBackColor = true;
+      this.btnCheckNoBitstreamOptions.Visible = false;
+      this.btnCheckNoBitstreamOptions.Click += new System.EventHandler(this.btnCheckNoBitstreamOptions_Click);
+      // 
+      // btnCheckAllBitstreamOptions
+      // 
+      this.btnCheckAllBitstreamOptions.Location = new System.Drawing.Point(166, 347);
+      this.btnCheckAllBitstreamOptions.Name = "btnCheckAllBitstreamOptions";
+      this.btnCheckAllBitstreamOptions.Size = new System.Drawing.Size(55, 23);
+      this.btnCheckAllBitstreamOptions.TabIndex = 12;
+      this.btnCheckAllBitstreamOptions.Text = "All";
+      this.btnCheckAllBitstreamOptions.UseVisualStyleBackColor = true;
+      this.btnCheckAllBitstreamOptions.Visible = false;
+      this.btnCheckAllBitstreamOptions.Click += new System.EventHandler(this.btnCheckAllBitstreamOptions_Click);
+      // 
       // btnRefreshDevices
       // 
       this.btnRefreshDevices.Location = new System.Drawing.Point(166, 200);
       this.btnRefreshDevices.Name = "btnRefreshDevices";
-      this.btnRefreshDevices.Size = new System.Drawing.Size(106, 23);
+      this.btnRefreshDevices.Size = new System.Drawing.Size(109, 23);
       this.btnRefreshDevices.TabIndex = 11;
       this.btnRefreshDevices.Text = "Refresh devices";
       this.btnRefreshDevices.UseVisualStyleBackColor = true;
@@ -313,37 +347,15 @@
       this.lblDevice.TabIndex = 3;
       this.lblDevice.Text = "Audio device";
       // 
-      // btnCheckAllBitstreamOptions
+      // chkEnableLavAudioDelayControl
       // 
-      this.btnCheckAllBitstreamOptions.Location = new System.Drawing.Point(166, 347);
-      this.btnCheckAllBitstreamOptions.Name = "btnCheckAllBitstreamOptions";
-      this.btnCheckAllBitstreamOptions.Size = new System.Drawing.Size(55, 23);
-      this.btnCheckAllBitstreamOptions.TabIndex = 12;
-      this.btnCheckAllBitstreamOptions.Text = "All";
-      this.btnCheckAllBitstreamOptions.UseVisualStyleBackColor = true;
-      this.btnCheckAllBitstreamOptions.Visible = false;
-      this.btnCheckAllBitstreamOptions.Click += new System.EventHandler(this.btnCheckAllBitstreamOptions_Click);
-      // 
-      // btnCheckNoBitstreamOptions
-      // 
-      this.btnCheckNoBitstreamOptions.Location = new System.Drawing.Point(220, 347);
-      this.btnCheckNoBitstreamOptions.Name = "btnCheckNoBitstreamOptions";
-      this.btnCheckNoBitstreamOptions.Size = new System.Drawing.Size(55, 23);
-      this.btnCheckNoBitstreamOptions.TabIndex = 13;
-      this.btnCheckNoBitstreamOptions.Text = "None";
-      this.btnCheckNoBitstreamOptions.UseVisualStyleBackColor = true;
-      this.btnCheckNoBitstreamOptions.Visible = false;
-      this.btnCheckNoBitstreamOptions.Click += new System.EventHandler(this.btnCheckNoBitstreamOptions_Click);
-      // 
-      // chkAlwaysShowLavBitstreamToggle
-      // 
-      this.chkAlwaysShowLavBitstreamToggle.AutoSize = true;
-      this.chkAlwaysShowLavBitstreamToggle.Location = new System.Drawing.Point(8, 130);
-      this.chkAlwaysShowLavBitstreamToggle.Name = "chkAlwaysShowLavBitstreamToggle";
-      this.chkAlwaysShowLavBitstreamToggle.Size = new System.Drawing.Size(265, 17);
-      this.chkAlwaysShowLavBitstreamToggle.TabIndex = 14;
-      this.chkAlwaysShowLavBitstreamToggle.Text = "Always show LAV bitstream toggle in context menu";
-      this.chkAlwaysShowLavBitstreamToggle.UseVisualStyleBackColor = true;
+      this.chkEnableLavAudioDelayControl.AutoSize = true;
+      this.chkEnableLavAudioDelayControl.Location = new System.Drawing.Point(12, 135);
+      this.chkEnableLavAudioDelayControl.Name = "chkEnableLavAudioDelayControl";
+      this.chkEnableLavAudioDelayControl.Size = new System.Drawing.Size(251, 17);
+      this.chkEnableLavAudioDelayControl.TabIndex = 15;
+      this.chkEnableLavAudioDelayControl.Text = "Show LAV audio delay controls in context menu";
+      this.chkEnableLavAudioDelayControl.UseVisualStyleBackColor = true;
       // 
       // SetupForm
       // 
@@ -395,5 +407,6 @@
     private System.Windows.Forms.Button btnCheckAllBitstreamOptions;
     private System.Windows.Forms.Button btnCheckNoBitstreamOptions;
     private System.Windows.Forms.CheckBox chkAlwaysShowLavBitstreamToggle;
+    private System.Windows.Forms.CheckBox chkEnableLavAudioDelayControl;
   }
 }

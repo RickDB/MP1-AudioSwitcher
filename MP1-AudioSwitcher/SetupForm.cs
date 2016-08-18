@@ -61,6 +61,7 @@ namespace MP1_AudioSwitcher
       cbStartupPlaybackDevices.Text = Settings.DefaultPlaybackDevice;
       chkAlwaysShowLavBitstreamToggle.Checked = Settings.LAVbitstreamAlwaysShowToggleInContextMenu;
 
+      chkEnableLavAudioDelayControl.Checked = Settings.LAVaudioDelayControlsInContextMenu;
       chkEnableLAVbitstreamPerDevice.Checked = Settings.LAVbitstreamPerDevice;
       LoadKnownDevices();
 
@@ -118,6 +119,7 @@ namespace MP1_AudioSwitcher
       {
         Settings.RemoteKeyDialogContextMenu = cbRemoteKey.SelectedIndex;
         Settings.DefaultPlaybackDevice = cbStartupPlaybackDevices.Text;
+        Settings.LAVaudioDelayControlsInContextMenu = chkEnableLavAudioDelayControl.Checked;
         Settings.LAVbitstreamAlwaysShowToggleInContextMenu = chkAlwaysShowLavBitstreamToggle.Checked;
         Settings.LAVbitstreamPerDevice = chkEnableLAVbitstreamPerDevice.Checked;
 

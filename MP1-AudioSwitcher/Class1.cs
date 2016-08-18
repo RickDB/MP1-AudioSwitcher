@@ -2,23 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using AudioSwitcher.AudioApi;
+using AudioSwitcher.AudioApi.CoreAudio;
 using MediaPortal.Configuration;
 using MediaPortal.Dialogs;
 using MediaPortal.GUI.Library;
-
-using AudioSwitcher.AudioApi;
-using AudioSwitcher.AudioApi.CoreAudio;
+using MediaPortal.Player;
 using Microsoft.Win32;
+using Action = MediaPortal.GUI.Library.Action;
 
 namespace MP1_AudioSwitcher
 {
   [PluginIcons("MP1_AudioSwitcher.Resources.Enabled.png", "MP1_AudioSwitcher.Resources.Disabled.png")]
-
   public class Class1 : GUIWindow, ISetupForm
   {
-
     private CoreAudioController _ac;
-    private static bool _bitstreamEnabled;
+
 
     // With GetID it will be an window-plugin / otherwise a process-plugin
     // Enter the id number here again
@@ -98,11 +97,14 @@ namespace MP1_AudioSwitcher
         Log.Error(ex.Message);
       }
 
-      // Button Handler
-      GUIWindowManager.OnNewAction += new OnActionHandler(OnNewAction);
+      // Load settings
       Settings.LoadSettings();
 
-      IEnumerable<CoreAudioDevice> devices = GetPlaybackDevices();
+      // Button Handler
+      GUIWindowManager.OnNewAction += OnNewAction;
+      Settings.LoadSettings();
+
+      var devices = GetPlaybackDevices();
 
       if (!string.IsNullOrEmpty(Settings.DefaultPlaybackDevice))
       {
@@ -123,13 +125,13 @@ namespace MP1_AudioSwitcher
         }
         else
         {
-         Log.Error("No playback devices found!");
+          Log.Error("No playback devices found!");
         }
       }
       else if (Settings.LAVbitstreamPerDevice)
       {
         // Get current device
-        string currentDeviceName = "";
+        var currentDeviceName = "";
         if (devices != null)
         {
           foreach (var device in devices)
@@ -147,68 +149,23 @@ namespace MP1_AudioSwitcher
         }
         else
         {
-         Log.Error("No playback devices found!");
+          Log.Error("No playback devices found!");
         }
       }
 
       return true;
     }
 
-    public void SetLavBitstreamSettings(string currentDeviceName)
-    {
-      try
-      {
-        if (!string.IsNullOrEmpty(Settings.LAVbitstreamPropertyList))
-        {
-          if (Settings.LAVbitstreamPropertyList.Contains("|"))
-          {
-            var splitDevices = Settings.LAVbitstreamPropertyList.Split('|');
-            foreach (var device in splitDevices)
-            {
-              var splitDevice = device.Split('^');
-              string deviceName = splitDevice[0];
-              string bitStreamEnabled = splitDevice[1];
-              string bitStreamOptions = splitDevice[2];
-
-              if (deviceName == currentDeviceName)
-              {
-                ToggleLAVBitstreaming(bool.Parse(bitStreamEnabled), bitStreamOptions);
-              }
-            }
-          }
-          else
-          {
-            var splitDevice = Settings.LAVbitstreamPropertyList.Split('^');
-
-            string deviceName = splitDevice[0];
-            string bitStreamEnabled = splitDevice[1];
-            string bitStreamOptions = splitDevice[2];
-
-            if (deviceName == currentDeviceName)
-            {
-              ToggleLAVBitstreaming(bool.Parse(bitStreamEnabled), bitStreamOptions);
-            }
-          }
-        }
-      }
-      catch (Exception ex)
-      {
-        Log.Error("Error occured during SetLavBitstreamSettings()");
-        Log.Error(ex.Message);
-      }
-
-    }
-
-    public void OnNewAction(MediaPortal.GUI.Library.Action action)
+    public void OnNewAction(Action action)
     {
       // Remote Key to open Menu
-      if ((action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_RED_BUTTON && Settings.RemoteKeyDialogContextMenu == 1) ||
-         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_GREEN_BUTTON && Settings.RemoteKeyDialogContextMenu == 2) ||
-         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_BLUE_BUTTON && Settings.RemoteKeyDialogContextMenu == 3) ||
-         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_YELLOW_BUTTON && Settings.RemoteKeyDialogContextMenu == 4) ||
-         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_DVD_MENU && Settings.RemoteKeyDialogContextMenu == 5) ||
-         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_SUBPAGE_DOWN && Settings.RemoteKeyDialogContextMenu == 6) ||
-         (action.wID == MediaPortal.GUI.Library.Action.ActionType.ACTION_REMOTE_SUBPAGE_UP && Settings.RemoteKeyDialogContextMenu == 7))
+      if ((action.wID == Action.ActionType.ACTION_REMOTE_RED_BUTTON && Settings.RemoteKeyDialogContextMenu == 1) ||
+          (action.wID == Action.ActionType.ACTION_REMOTE_GREEN_BUTTON && Settings.RemoteKeyDialogContextMenu == 2) ||
+          (action.wID == Action.ActionType.ACTION_REMOTE_BLUE_BUTTON && Settings.RemoteKeyDialogContextMenu == 3) ||
+          (action.wID == Action.ActionType.ACTION_REMOTE_YELLOW_BUTTON && Settings.RemoteKeyDialogContextMenu == 4) ||
+          (action.wID == Action.ActionType.ACTION_DVD_MENU && Settings.RemoteKeyDialogContextMenu == 5) ||
+          (action.wID == Action.ActionType.ACTION_REMOTE_SUBPAGE_DOWN && Settings.RemoteKeyDialogContextMenu == 6) ||
+          (action.wID == Action.ActionType.ACTION_REMOTE_SUBPAGE_UP && Settings.RemoteKeyDialogContextMenu == 7))
       {
         DialogContextMenu();
       }
@@ -217,7 +174,7 @@ namespace MP1_AudioSwitcher
     private IEnumerable<CoreAudioDevice> GetPlaybackDevices()
     {
       IEnumerable<CoreAudioDevice> devices = null;
-      bool reInitCoreAudioController = false;
+      var reInitCoreAudioController = false;
 
       try
       {
@@ -240,7 +197,6 @@ namespace MP1_AudioSwitcher
           _ac = new CoreAudioController();
           devices = _ac.GetDevices(DeviceType.Playback, DeviceState.Active);
         }
-
       }
       catch (Exception ex)
       {
@@ -249,6 +205,20 @@ namespace MP1_AudioSwitcher
       }
 
       return devices;
+    }
+
+    public void ReadAllLavDelaySettings()
+    {
+      try
+      {
+        Settings.LAVaudioDelayEnabled = Convert.ToBoolean(Convert.ToInt16(IsLavAudioDelayEnabled()));
+        Settings.LAVaudioDelay = GetLavAudioDelay().ToString();
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error occured during ReadAllLavDelaySettings()");
+        Log.Error(ex.Message);
+      }
     }
 
     private void SetPlaybackDevice(CoreAudioDevice device)
@@ -271,72 +241,191 @@ namespace MP1_AudioSwitcher
 
     private void DialogContextMenu()
     {
-      // Showing context menu
-      var dlg = (GUIDialogMenu) GUIWindowManager.GetWindow((int) Window.WINDOW_DIALOG_MENU);
-      dlg.Reset();
-      dlg.SetHeading("Audio switcher");
-
-      dlg.Add(new GUIListItem("Change playback device"));
-      if (Settings.LAVbitstreamPerDevice || Settings.LAVbitstreamAlwaysShowToggleInContextMenu)
+      try
       {
-        dlg.Add(_bitstreamEnabled
-          ? new GUIListItem("Disable LAV bitstreaming")
-          : new GUIListItem("Enable LAV bitstreaming"));
-      }
+        // Showing context menu
+        var dlg = (GUIDialogMenu) GUIWindowManager.GetWindow((int) Window.WINDOW_DIALOG_MENU);
+        dlg.Reset();
+        dlg.SetHeading("Audio switcher");
 
-
-      dlg.SelectedLabel = 0;
-      dlg.DoModal(GUIWindowManager.ActiveWindow);
-
-
-      if (dlg.SelectedLabelText == "Change playback device")
-      {
-        IEnumerable<CoreAudioDevice> devices = GetPlaybackDevices();
-
-        var dlgSetPlaybackDevice = (GUIDialogMenu) GUIWindowManager.GetWindow((int) Window.WINDOW_DIALOG_MENU);
-        dlgSetPlaybackDevice.Reset();
-        dlgSetPlaybackDevice.SetHeading("Select playback device");
-        dlgSetPlaybackDevice.SelectedLabel = 0;
-
-        int i = 0;
-        if (devices != null)
+        dlg.Add(new GUIListItem("Change playback device"));
+        if (Settings.LAVbitstreamPerDevice || Settings.LAVbitstreamAlwaysShowToggleInContextMenu)
         {
-          foreach (var device in devices)
+          bool bitstreamingIsEnabled = Convert.ToBoolean(Convert.ToInt16(IsLavBitstreamingEnabled()));
+
+          dlg.Add(bitstreamingIsEnabled
+            ? new GUIListItem("Disable LAV bitstreaming")
+            : new GUIListItem("Enable LAV bitstreaming"));
+        }
+
+        if (Settings.LAVaudioDelayControlsInContextMenu)
+        {
+          ReadAllLavDelaySettings();
+          if (!Settings.LAVaudioDelayEnabled)
           {
+            dlg.Add(new GUIListItem("Enable LAV audio delay"));
+          }
+          else
+          {
+            dlg.Add(new GUIListItem(string.Format("Change LAV audio delay ( {0}ms )", Settings.LAVaudioDelay)));
+            dlg.Add(new GUIListItem("Disable LAV audio delay"));
+          }
+        }
+
+        dlg.SelectedLabel = 0;
+        dlg.DoModal(GUIWindowManager.ActiveWindow);
+
+
+        if (dlg.SelectedLabelText == "Change playback device")
+        {
+          var devices = GetPlaybackDevices();
+
+          var dlgSetPlaybackDevice = (GUIDialogMenu) GUIWindowManager.GetWindow((int) Window.WINDOW_DIALOG_MENU);
+          dlgSetPlaybackDevice.Reset();
+          dlgSetPlaybackDevice.SetHeading("Select playback device");
+          dlgSetPlaybackDevice.SelectedLabel = 0;
+
+          var i = 0;
+          if (devices != null)
+          {
+            foreach (var device in devices)
+            {
               dlgSetPlaybackDevice.Add(device.FullName);
               if (device.IsDefaultDevice)
               {
                 dlgSetPlaybackDevice.SelectedLabel = i;
               }
               i++;
+            }
+          }
+          else
+          {
+            dlgSetPlaybackDevice.Add("No playback devices found!");
+          }
+
+          dlgSetPlaybackDevice.DoModal(GUIWindowManager.ActiveWindow);
+
+          if (dlgSetPlaybackDevice.SelectedLabel >= 0)
+          {
+            var selectedDevice = dlgSetPlaybackDevice.SelectedLabelText;
+            if (selectedDevice != "No playback devices found!" && !string.IsNullOrEmpty(selectedDevice))
+            {
+              var device = devices.ElementAt(dlgSetPlaybackDevice.SelectedLabel);
+              SetPlaybackDevice(device);
+            }
+          }
+        }
+        if (dlg.SelectedLabelText == "Enable LAV bitstreaming")
+        {
+          ToggleLAVBitstreaming(true, "", true);
+        }
+
+        if (dlg.SelectedLabelText == "Disable LAV bitstreaming")
+        {
+          ToggleLAVBitstreaming(false, "", true);
+        }
+
+        if (dlg.SelectedLabelText.StartsWith("Disable LAV audio delay"))
+        {
+          SetLavAudioDelay(false, "");
+          RestartVideoPlayback(false, "");
+        }
+
+        if (dlg.SelectedLabelText == "Enable LAV audio delay" ||
+            dlg.SelectedLabelText.StartsWith("Change LAV audio delay"))
+        {
+          SelectLavAudioDelay();
+        }
+
+        // Save settings
+        Settings.SaveSettings();
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error occured during DialogContextMenu()");
+        Log.Error(ex.Message);
+      }
+    }
+
+    public void SetLavBitstreamSettings(string currentDeviceName)
+    {
+      try
+      {
+        if (!string.IsNullOrEmpty(Settings.LAVbitstreamPropertyList))
+        {
+          if (Settings.LAVbitstreamPropertyList.Contains("|"))
+          {
+            var splitDevices = Settings.LAVbitstreamPropertyList.Split('|');
+            foreach (var device in splitDevices)
+            {
+              var splitDevice = device.Split('^');
+              var deviceName = splitDevice[0];
+              var bitStreamEnabled = splitDevice[1];
+              var bitStreamOptions = splitDevice[2];
+
+              if (deviceName == currentDeviceName)
+              {
+                ToggleLAVBitstreaming(bool.Parse(bitStreamEnabled), bitStreamOptions);
+              }
+            }
+          }
+          else
+          {
+            var splitDevice = Settings.LAVbitstreamPropertyList.Split('^');
+
+            var deviceName = splitDevice[0];
+            var bitStreamEnabled = splitDevice[1];
+            var bitStreamOptions = splitDevice[2];
+
+            if (deviceName == currentDeviceName)
+            {
+              ToggleLAVBitstreaming(bool.Parse(bitStreamEnabled), bitStreamOptions);
+            }
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error occured during SetLavBitstreamSettings()");
+        Log.Error(ex.Message);
+      }
+    }
+
+    public static int IsLavBitstreamingEnabled()
+    {
+      var bitstreamEnabled = 0;
+      try
+      {
+        var myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\LAV\\Audio", true);
+        if (myKey != null)
+        {
+          List<int> bitreamOptions = new List<int>();
+          bitreamOptions.Add(int.Parse(myKey.GetValue("Bitstreaming_ac3", RegistryValueKind.DWord).ToString()));
+          bitreamOptions.Add(int.Parse(myKey.GetValue("Bitstreaming_dts", RegistryValueKind.DWord).ToString()));
+          bitreamOptions.Add(int.Parse(myKey.GetValue("Bitstreaming_dtshd", RegistryValueKind.DWord).ToString()));
+          bitreamOptions.Add(int.Parse(myKey.GetValue("Bitstreaming_eac3", RegistryValueKind.DWord).ToString()));
+          bitreamOptions.Add(int.Parse(myKey.GetValue("Bitstreaming_truehd", RegistryValueKind.DWord).ToString()));
+
+          var bistreamEnable = bitreamOptions.Where(b => b == 1);
+          if (bistreamEnable.Any())
+          {
+            bitstreamEnabled = 1;
           }
         }
         else
         {
-          dlgSetPlaybackDevice.Add("No playback devices found!");
+          Log.Debug("LAV main registry key not found");
         }
 
-        dlgSetPlaybackDevice.DoModal(GUIWindowManager.ActiveWindow);
-
-        if (dlgSetPlaybackDevice.SelectedLabel >= 0)
-        {
-          string selectedDevice = dlgSetPlaybackDevice.SelectedLabelText;
-          if (selectedDevice != "No playback devices found!" && !string.IsNullOrEmpty(selectedDevice))
-          {
-            var device = devices.ElementAt(dlgSetPlaybackDevice.SelectedLabel);
-            SetPlaybackDevice(device);
-          }
-        }
+        myKey?.Close();
       }
-      if (dlg.SelectedLabelText == "Enable LAV bitstreaming")
+      catch (Exception ex)
       {
-        ToggleLAVBitstreaming(true, "", true);
+        Log.Error("Error occured during IsLavBitstreamingEnabled()");
+        Log.Error(ex.Message);
       }
 
-      if (dlg.SelectedLabelText == "Disable LAV bitstreaming")
-      {
-        ToggleLAVBitstreaming(false,"", true);
-      }
+      return bitstreamEnabled;
     }
 
     public static void ToggleLAVBitstreaming(bool enable, string bitstreamOptions, bool forced = false)
@@ -344,7 +433,6 @@ namespace MP1_AudioSwitcher
       try
       {
         var myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\LAV\\Audio", true);
-        _bitstreamEnabled = enable;
 
         if (myKey != null)
         {
@@ -361,7 +449,7 @@ namespace MP1_AudioSwitcher
             }
             else
             {
-              List<string> bitstreamOptionsList = new List<string>();
+              var bitstreamOptionsList = new List<string>();
               if (bitstreamOptions.Contains(","))
               {
                 bitstreamOptionsList = bitstreamOptions.Split(',').ToList();
@@ -411,11 +499,191 @@ namespace MP1_AudioSwitcher
           Log.Debug("LAV main registry key not found");
         }
 
-        myKey.Close();
+        myKey?.Close();
       }
       catch (Exception ex)
       {
         Log.Error("Error occured during ToggleLAVBitstreaming()");
+        Log.Error(ex.Message);
+      }
+    }
+
+    public void SelectLavAudioDelay()
+    {
+      try
+      {
+        var keyBoard =
+          (VirtualKeyboard) GUIWindowManager.GetWindow((int) Window.WINDOW_VIRTUAL_KEYBOARD);
+        if (Settings.LAVaudioDelay != "0")
+        {
+          keyBoard.Label = Settings.LAVaudioDelay;
+        }
+
+        if (keyBoard != null)
+        {
+          keyBoard.Reset();
+          keyBoard.SetLabelAsInitialText(true);
+          keyBoard.DoModal(GUIWindowManager.ActiveWindow);
+          if (keyBoard.IsConfirmed)
+          {
+            if (!string.IsNullOrEmpty(keyBoard.Text))
+            {
+              int delay;
+              var isValidInt = int.TryParse(keyBoard.Text, out delay);
+              if (isValidInt)
+              {
+                SetLavAudioDelay(true, delay.ToString());
+                RestartVideoPlayback(true, delay.ToString());
+              }
+            }
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error occured during SelectLAVAudioDelay()");
+        Log.Error(ex.Message);
+      }
+    }
+
+    public static int IsLavAudioDelayEnabled()
+    {
+      var audioDelayEnabled = 0;
+      try
+      {
+        var myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\LAV\\Audio", true);
+        if (myKey != null)
+        {
+          audioDelayEnabled = int.Parse(myKey.GetValue("AudioDelayEnabled", RegistryValueKind.DWord).ToString());
+        }
+        else
+        {
+          Log.Debug("LAV main registry key not found");
+        }
+
+        myKey?.Close();
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error occured during GetLavAudioDelay()");
+        Log.Error(ex.Message);
+      }
+
+      return audioDelayEnabled;
+    }
+
+    public static int GetLavAudioDelay()
+    {
+      var audioDelay = 0;
+      try
+      {
+        var myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\LAV\\Audio", true);
+        if (myKey != null)
+        {
+          var delay = myKey.GetValue("AudioDelay", RegistryValueKind.DWord).ToString();
+          if (!string.IsNullOrEmpty(delay))
+          {
+            audioDelay = int.Parse(delay);
+          }
+        }
+        else
+        {
+          Log.Debug("LAV main registry key not found");
+        }
+
+        myKey?.Close();
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error occured during GetLavAudioDelay()");
+        Log.Error(ex.Message);
+      }
+
+      return audioDelay;
+    }
+
+    public void SetLavAudioDelay(bool enable, string delay)
+    {
+      try
+      {
+        var myKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\LAV\\Audio", true);
+
+        if (myKey != null)
+        {
+          if (enable)
+          {
+            Log.Debug("Enabling LAV audio delay with delay of {0}ms", delay);
+            myKey.SetValue("AudioDelayEnabled", "1", RegistryValueKind.DWord);
+            myKey.SetValue("AudioDelay", delay, RegistryValueKind.DWord);
+          }
+          else
+          {
+            myKey.SetValue("AudioDelayEnabled", "0", RegistryValueKind.DWord);
+          }
+        }
+        else
+        {
+          Log.Debug("LAV main registry key not found");
+        }
+
+        myKey?.Close();
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error occured during SetLAVAudioDelay()");
+        Log.Error(ex.Message);
+      }
+    }
+
+    public void RestartVideoPlayback(bool enableDelay, string delay)
+    {
+      if (g_Player.Playing)
+      {
+        var currentPlayingFile = g_Player.currentFilePlaying;
+        var resumePosition = Convert.ToInt32(g_Player.CurrentPosition);
+
+        var dlgYesNo = (GUIDialogYesNo) GUIWindowManager.GetWindow((int) Window.WINDOW_DIALOG_YES_NO);
+        if (null != dlgYesNo)
+        {
+          dlgYesNo.SetHeading(enableDelay ? "Restart playback with new delay?" : "Restart playback with delay disabled?");
+          dlgYesNo.SetLine(1, g_Player.currentFileName);
+          dlgYesNo.SetLine(2, "Will resume at position (s): " + resumePosition);
+
+          if (enableDelay)
+          {
+            dlgYesNo.SetLine(2, "New delay: (ms): " + delay);
+          }
+
+          dlgYesNo.SetDefaultToYes(true);
+
+          dlgYesNo.DoModal(GUIWindowManager.ActiveWindow);
+
+          if (dlgYesNo.IsConfirmed)
+          {
+            PlayVideo(currentPlayingFile, resumePosition, "", "", true);
+          }
+        }
+      }
+    }
+
+    public void PlayVideo(string curFileName, int timeMovieStopped, string audioLanguage, string subLanguage,
+      bool stopPlayback)
+    {
+      try
+      {
+        GUIGraphicsContext.IsFullScreenVideo = true;
+        GUIWindowManager.ActivateWindow((int) Window.WINDOW_FULLSCREEN_VIDEO);
+
+        g_Player.Play(curFileName, g_Player.MediaType.Video);
+        if (g_Player.Playing)
+        {
+          if (timeMovieStopped > 0)
+            g_Player.SeekAbsolute(timeMovieStopped);
+        }
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error occured during PlayVideo()");
         Log.Error(ex.Message);
       }
     }

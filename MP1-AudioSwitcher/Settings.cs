@@ -19,6 +19,11 @@ namespace MP1_AudioSwitcher
     public static bool LAVbitstreamPerDevice;
     public static string LAVbitstreamPropertyList;
 
+    // Audio delay
+    public static bool LAVaudioDelayControlsInContextMenu;
+    public static bool LAVaudioDelayEnabled;
+    public static string LAVaudioDelay;
+
     #endregion
 
     public static void LoadSettings()
@@ -49,6 +54,10 @@ namespace MP1_AudioSwitcher
         LAVbitstreamAlwaysShowToggleInContextMenu = reader.GetValueAsBool("AudioSwitcher", "LAVbitstreamAlwaysShowToggleInContextMenu", false);
         LAVbitstreamPerDevice = reader.GetValueAsBool("AudioSwitcher", "LAVbitstreamPerDevice", false);
         LAVbitstreamPropertyList = reader.GetValueAsString("AudioSwitcher", "LAVbitstreamPropertyList", "");
+
+        LAVaudioDelayControlsInContextMenu = reader.GetValueAsBool("AudioSwitcher", "LAVaudioDelayControlsInContextMenu", false);
+        LAVaudioDelayEnabled = reader.GetValueAsBool("AudioSwitcher", "LAVaudioDelayEnabled", false);
+        LAVaudioDelay = reader.GetValueAsString("AudioSwitcher", "LAVaudioDelay", "0");
       }
     }
 
@@ -62,9 +71,14 @@ namespace MP1_AudioSwitcher
       {
         reader.SetValue("AudioSwitcher", "remoteKeyDialogContextMenu", RemoteKeyDialogContextMenu);
         reader.SetValue("AudioSwitcher", "defaultPlaybackDevice", DefaultPlaybackDevice);
+
         reader.SetValueAsBool("AudioSwitcher", "LAVbitstreamAlwaysShowToggleInContextMenu", LAVbitstreamAlwaysShowToggleInContextMenu);
         reader.SetValueAsBool("AudioSwitcher", "LAVbitstreamPerDevice", LAVbitstreamPerDevice);
         reader.SetValue("AudioSwitcher", "LAVbitstreamPropertyList", LAVbitstreamPropertyList);
+
+        reader.SetValueAsBool("AudioSwitcher", "LAVaudioDelayControlsInContextMenu", LAVaudioDelayControlsInContextMenu);
+        reader.SetValueAsBool("AudioSwitcher", "LAVaudioDelayEnabled", LAVaudioDelayEnabled);
+        reader.SetValue("AudioSwitcher", "LAVaudioDelay", LAVaudioDelay);
       }
     }
 
