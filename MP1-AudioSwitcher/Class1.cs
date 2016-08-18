@@ -514,15 +514,16 @@ namespace MP1_AudioSwitcher
       {
         var keyBoard =
           (VirtualKeyboard) GUIWindowManager.GetWindow((int) Window.WINDOW_VIRTUAL_KEYBOARD);
-        if (Settings.LAVaudioDelay != "0")
-        {
-          keyBoard.Label = Settings.LAVaudioDelay;
-        }
 
         if (keyBoard != null)
         {
           keyBoard.Reset();
-          keyBoard.SetLabelAsInitialText(true);
+          keyBoard.SetLabelAsInitialText(false);
+          if (Settings.LAVaudioDelay != "0")
+          {
+            keyBoard.Text = Settings.LAVaudioDelay.Trim();
+          }
+
           keyBoard.DoModal(GUIWindowManager.ActiveWindow);
           if (keyBoard.IsConfirmed)
           {
