@@ -651,7 +651,7 @@ namespace MP1_AudioSwitcher
 
           if (enableDelay)
           {
-            dlgYesNo.SetLine(2, "New delay: (ms): " + delay);
+            dlgYesNo.SetLine(3, "New delay: (ms): " + delay);
           }
 
           dlgYesNo.SetDefaultToYes(true);
