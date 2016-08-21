@@ -37,6 +37,7 @@
       this.lblBitstreamingHint = new System.Windows.Forms.Label();
       this.tabControl = new System.Windows.Forms.TabControl();
       this.tabPageGeneric = new System.Windows.Forms.TabPage();
+      this.chkEnableLavAudioDelayControl = new System.Windows.Forms.CheckBox();
       this.btnClearDevice = new System.Windows.Forms.Button();
       this.btbRefreshDefaultPlaybackDevices = new System.Windows.Forms.Button();
       this.cbStartupPlaybackDevices = new System.Windows.Forms.ComboBox();
@@ -56,7 +57,8 @@
       this.btnAddDevice = new System.Windows.Forms.Button();
       this.cbBitstreamDeviceEnabled = new System.Windows.Forms.CheckBox();
       this.lblDevice = new System.Windows.Forms.Label();
-      this.chkEnableLavAudioDelayControl = new System.Windows.Forms.CheckBox();
+      this.btnDeviceUp = new System.Windows.Forms.Button();
+      this.btnDeviceDown = new System.Windows.Forms.Button();
       this.tabControl.SuspendLayout();
       this.tabPageGeneric.SuspendLayout();
       this.tabPageBitStream.SuspendLayout();
@@ -101,10 +103,14 @@
       // 
       // cbAvailableAudioDevices
       // 
+      this.cbAvailableAudioDevices.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+      this.cbAvailableAudioDevices.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
       this.cbAvailableAudioDevices.Location = new System.Drawing.Point(8, 173);
       this.cbAvailableAudioDevices.Name = "cbAvailableAudioDevices";
       this.cbAvailableAudioDevices.Size = new System.Drawing.Size(270, 21);
       this.cbAvailableAudioDevices.TabIndex = 0;
+      this.cbAvailableAudioDevices.SelectedIndexChanged += new System.EventHandler(this.cbAvailableAudioDevices_SelectedIndexChanged);
+      this.cbAvailableAudioDevices.DropDownClosed += new System.EventHandler(this.cbAvailableAudioDevices_DropDownClosed);
       // 
       // chkEnableLAVbitstreamPerDevice
       // 
@@ -152,6 +158,16 @@
       this.tabPageGeneric.TabIndex = 0;
       this.tabPageGeneric.Text = "Generic";
       // 
+      // chkEnableLavAudioDelayControl
+      // 
+      this.chkEnableLavAudioDelayControl.AutoSize = true;
+      this.chkEnableLavAudioDelayControl.Location = new System.Drawing.Point(12, 135);
+      this.chkEnableLavAudioDelayControl.Name = "chkEnableLavAudioDelayControl";
+      this.chkEnableLavAudioDelayControl.Size = new System.Drawing.Size(251, 17);
+      this.chkEnableLavAudioDelayControl.TabIndex = 15;
+      this.chkEnableLavAudioDelayControl.Text = "Show LAV audio delay controls in context menu";
+      this.chkEnableLavAudioDelayControl.UseVisualStyleBackColor = true;
+      // 
       // btnClearDevice
       // 
       this.btnClearDevice.Location = new System.Drawing.Point(196, 88);
@@ -174,10 +190,14 @@
       // 
       // cbStartupPlaybackDevices
       // 
+      this.cbStartupPlaybackDevices.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+      this.cbStartupPlaybackDevices.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
       this.cbStartupPlaybackDevices.Location = new System.Drawing.Point(196, 61);
       this.cbStartupPlaybackDevices.Name = "cbStartupPlaybackDevices";
       this.cbStartupPlaybackDevices.Size = new System.Drawing.Size(329, 21);
       this.cbStartupPlaybackDevices.TabIndex = 12;
+      this.cbStartupPlaybackDevices.SelectedIndexChanged += new System.EventHandler(this.cbStartupPlaybackDevices_SelectedIndexChanged);
+      this.cbStartupPlaybackDevices.DropDownClosed += new System.EventHandler(this.cbStartupPlaybackDevices_DropDownClosed);
       // 
       // lblDefaultPlaybackDevice
       // 
@@ -191,6 +211,8 @@
       // tabPageBitStream
       // 
       this.tabPageBitStream.BackColor = System.Drawing.SystemColors.Control;
+      this.tabPageBitStream.Controls.Add(this.btnDeviceDown);
+      this.tabPageBitStream.Controls.Add(this.btnDeviceUp);
       this.tabPageBitStream.Controls.Add(this.chkAlwaysShowLavBitstreamToggle);
       this.tabPageBitStream.Controls.Add(this.btnCheckNoBitstreamOptions);
       this.tabPageBitStream.Controls.Add(this.btnCheckAllBitstreamOptions);
@@ -347,15 +369,25 @@
       this.lblDevice.TabIndex = 3;
       this.lblDevice.Text = "Audio device";
       // 
-      // chkEnableLavAudioDelayControl
+      // btnDeviceUp
       // 
-      this.chkEnableLavAudioDelayControl.AutoSize = true;
-      this.chkEnableLavAudioDelayControl.Location = new System.Drawing.Point(12, 135);
-      this.chkEnableLavAudioDelayControl.Name = "chkEnableLavAudioDelayControl";
-      this.chkEnableLavAudioDelayControl.Size = new System.Drawing.Size(251, 17);
-      this.chkEnableLavAudioDelayControl.TabIndex = 15;
-      this.chkEnableLavAudioDelayControl.Text = "Show LAV audio delay controls in context menu";
-      this.chkEnableLavAudioDelayControl.UseVisualStyleBackColor = true;
+      this.btnDeviceUp.Location = new System.Drawing.Point(294, 376);
+      this.btnDeviceUp.Name = "btnDeviceUp";
+      this.btnDeviceUp.Size = new System.Drawing.Size(75, 23);
+      this.btnDeviceUp.TabIndex = 15;
+      this.btnDeviceUp.Text = "Up";
+      this.btnDeviceUp.UseVisualStyleBackColor = true;
+      this.btnDeviceUp.Click += new System.EventHandler(this.btnDeviceUp_Click);
+      // 
+      // btnDeviceDown
+      // 
+      this.btnDeviceDown.Location = new System.Drawing.Point(375, 376);
+      this.btnDeviceDown.Name = "btnDeviceDown";
+      this.btnDeviceDown.Size = new System.Drawing.Size(75, 23);
+      this.btnDeviceDown.TabIndex = 16;
+      this.btnDeviceDown.Text = "Down";
+      this.btnDeviceDown.UseVisualStyleBackColor = true;
+      this.btnDeviceDown.Click += new System.EventHandler(this.btnDeviceDown_Click);
       // 
       // SetupForm
       // 
@@ -408,5 +440,7 @@
     private System.Windows.Forms.Button btnCheckNoBitstreamOptions;
     private System.Windows.Forms.CheckBox chkAlwaysShowLavBitstreamToggle;
     private System.Windows.Forms.CheckBox chkEnableLavAudioDelayControl;
+    private System.Windows.Forms.Button btnDeviceDown;
+    private System.Windows.Forms.Button btnDeviceUp;
   }
 }

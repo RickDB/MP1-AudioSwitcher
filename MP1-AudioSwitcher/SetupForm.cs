@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using AudioSwitcher.AudioApi;
 using AudioSwitcher.AudioApi.CoreAudio;
 using MediaPortal.GUI.Library;
+using Action = System.Action;
 
 namespace MP1_AudioSwitcher
 {
@@ -32,7 +33,10 @@ namespace MP1_AudioSwitcher
       try
       {
         cbAvailableAudioDevices.Items.Clear();
+        cbAvailableAudioDevices.AutoCompleteCustomSource.Clear();
         cbStartupPlaybackDevices.Items.Clear();
+        cbStartupPlaybackDevices.AutoCompleteCustomSource.Clear();
+
 
         CoreAudioController _ac = new CoreAudioController();
         IEnumerable<CoreAudioDevice> _knownDevices = _ac.GetDevices(DeviceType.Playback, DeviceState.Active);
@@ -40,7 +44,10 @@ namespace MP1_AudioSwitcher
         foreach (var device in _knownDevices)
         {
           cbAvailableAudioDevices.Items.Add(device.FullName);
+          cbAvailableAudioDevices.AutoCompleteCustomSource.Add(device.FullName);
           cbStartupPlaybackDevices.Items.Add(device.FullName);
+          cbStartupPlaybackDevices.AutoCompleteCustomSource.Add(device.FullName);
+
         }
       }
       catch (Exception ex)
@@ -63,6 +70,7 @@ namespace MP1_AudioSwitcher
 
       chkEnableLavAudioDelayControl.Checked = Settings.LAVaudioDelayControlsInContextMenu;
       chkEnableLAVbitstreamPerDevice.Checked = Settings.LAVbitstreamPerDevice;
+
       LoadKnownDevices();
 
       try
@@ -172,34 +180,54 @@ namespace MP1_AudioSwitcher
 
     private void btnAddDevice_Click(object sender, EventArgs e)
     {
+      var deviceName = cbAvailableAudioDevices.Text.Trim();
 
-      string checkBitstreamOptions = "";
-      foreach (var item in cblSupportedBitstreamOptions.CheckedItems)
+      if (!string.IsNullOrEmpty(deviceName))
       {
-        if (string.IsNullOrEmpty(checkBitstreamOptions))
+        string checkBitstreamOptions = "";
+        foreach (var item in cblSupportedBitstreamOptions.CheckedItems)
         {
-          checkBitstreamOptions = item.ToString();
+          if (string.IsNullOrEmpty(checkBitstreamOptions))
+          {
+            checkBitstreamOptions = item.ToString();
+          }
+          else
+          {
+            checkBitstreamOptions += "," + item;
+          }
+        }
+
+        string[] subItems =
+        {
+          cbBitstreamDeviceEnabled.Checked.ToString(),
+          checkBitstreamOptions
+        };
+
+        var isDuplicate = false;
+        foreach (ListViewItem item in lvBitstreamDevices.Items)
+        {
+          if (item.Text.ToLower() == deviceName.ToLower())
+          {
+            isDuplicate = true;
+          }
+        }
+
+        if (!isDuplicate)
+        {
+          lvBitstreamDevices.Items.Add(deviceName).SubItems.AddRange(subItems);
+
+          cbAvailableAudioDevices.Text = "";
+          cbBitstreamDeviceEnabled.Checked = false;
+
+          foreach (int i in cblSupportedBitstreamOptions.CheckedIndices)
+          {
+            cblSupportedBitstreamOptions.SetItemCheckState(i, CheckState.Unchecked);
+          }
         }
         else
         {
-          checkBitstreamOptions += "," + item;
+          MessageBox.Show(string.Format("Device [ {0} ] already exists in list.", deviceName));
         }
-      }
-
-      string[] subItems =
-      {
-        cbBitstreamDeviceEnabled.Checked.ToString(),
-        checkBitstreamOptions
-      };
-
-      lvBitstreamDevices.Items.Add(cbAvailableAudioDevices.Text).SubItems.AddRange(subItems);
-
-      cbAvailableAudioDevices.Text = "";
-      cbBitstreamDeviceEnabled.Checked = false;
-
-      foreach (int i in cblSupportedBitstreamOptions.CheckedIndices)
-      {
-        cblSupportedBitstreamOptions.SetItemCheckState(i, CheckState.Unchecked);
       }
     }
 
@@ -215,6 +243,64 @@ namespace MP1_AudioSwitcher
       catch (Exception ex)
       {
         MessageBox.Show("Error occured while removing device: " + ex.Message);
+      }
+    }
+
+    private enum MoveDirection
+    {
+      Up = -1,
+      Down = 1
+    };
+
+    private void MoveListViewItems(ListView sender, MoveDirection direction)
+    {
+      var valid = sender.SelectedItems.Count > 0 &&
+                  ((direction == MoveDirection.Down &&
+                    (sender.SelectedItems[sender.SelectedItems.Count - 1].Index < sender.Items.Count - 1))
+                   || (direction == MoveDirection.Up && (sender.SelectedItems[0].Index > 0)));
+
+      if (valid)
+      {
+        var start = true;
+        var first_idx = 0;
+        var items = new List<ListViewItem>();
+
+        // ambil data
+        foreach (ListViewItem i in sender.SelectedItems)
+        {
+          if (start)
+          {
+            first_idx = i.Index;
+            start = false;
+          }
+          items.Add(i);
+        }
+
+        sender.BeginUpdate();
+
+        // hapus
+        foreach (ListViewItem i in sender.SelectedItems) i.Remove();
+
+        // insert
+        if (direction == MoveDirection.Up)
+        {
+          var insert_to = first_idx - 1;
+          foreach (var i in items)
+          {
+            sender.Items.Insert(insert_to, i);
+            insert_to++;
+          }
+        }
+        else
+        {
+          var insert_to = first_idx + 1;
+          foreach (var i in items)
+          {
+            sender.Items.Insert(insert_to, i);
+            insert_to++;
+          }
+        }
+        sender.EndUpdate();
       }
     }
 
@@ -247,6 +333,40 @@ namespace MP1_AudioSwitcher
       {
         cblSupportedBitstreamOptions.SetItemChecked(i, false);
       }
+    }
+
+    private void UnFocusComboBox(ComboBox cb)
+    {
+      BeginInvoke(new Action(() => { cb.Select(0, 0); }));
+    }
+
+    private void cbStartupPlaybackDevices_DropDownClosed(object sender, EventArgs e)
+    {
+      UnFocusComboBox(cbStartupPlaybackDevices);
+    }
+
+    private void cbStartupPlaybackDevices_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      UnFocusComboBox(cbStartupPlaybackDevices);
+    }
+
+    private void cbAvailableAudioDevices_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      UnFocusComboBox(cbAvailableAudioDevices);
+    }
+    private void cbAvailableAudioDevices_DropDownClosed(object sender, EventArgs e)
+    {
+      UnFocusComboBox(cbAvailableAudioDevices);
+    }
+
+    private void btnDeviceUp_Click(object sender, EventArgs e)
+    {
+      MoveListViewItems(lvBitstreamDevices, MoveDirection.Up);
+    }
+
+    private void btnDeviceDown_Click(object sender, EventArgs e)
+    {
+      MoveListViewItems(lvBitstreamDevices, MoveDirection.Down);
     }
   }
 }
