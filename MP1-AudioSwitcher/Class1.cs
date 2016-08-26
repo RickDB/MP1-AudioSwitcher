@@ -104,48 +104,44 @@ namespace MP1_AudioSwitcher
       GUIWindowManager.OnNewAction += OnNewAction;
       Settings.LoadSettings();
 
-      var devices = GetPlaybackDevices();
 
       if (!string.IsNullOrEmpty(Settings.DefaultPlaybackDevice))
       {
+        var devices = GetPlaybackDevices();
+
         Log.Debug("Setting default playback device on startup: " + Settings.DefaultPlaybackDevice);
-        if (devices != null)
+
+        // Find default audio device match to setting
+        CoreAudioDevice playbackDeviceLookup = devices.FirstOrDefault(d =>
+                        d != null &&
+                        d.FullName.Equals(Settings.DefaultPlaybackDevice, StringComparison.CurrentCultureIgnoreCase));
+
+        if (playbackDeviceLookup != null)
         {
-          foreach (var device in devices)
+          SetPlaybackDevice(playbackDeviceLookup);
+
+          if (Settings.LAVbitstreamPerDevice)
           {
-            if (device.FullName == Settings.DefaultPlaybackDevice && !device.IsDefaultDevice)
-            {
-              SetPlaybackDevice(device);
-            }
-            else if (device.IsDefaultDevice && Settings.LAVbitstreamPerDevice)
-            {
-              SetLavBitstreamSettings(device.FullName);
-            }
+            SetLavBitstreamSettings(playbackDeviceLookup.FullName);
           }
         }
         else
         {
-          Log.Error("No playback devices found!");
+          Log.Error("Default playback devices not found!");
         }
       }
       else if (Settings.LAVbitstreamPerDevice)
       {
-        // Get current device
-        var currentDeviceName = "";
-        if (devices != null)
-        {
-          foreach (var device in devices)
-          {
-            if (device.IsDefaultDevice)
-            {
-              currentDeviceName = device.FullName;
-            }
-          }
+        var devices = GetPlaybackDevices();
 
-          if (!string.IsNullOrEmpty(currentDeviceName))
-          {
-            SetLavBitstreamSettings(currentDeviceName);
-          }
+        // Find default audio device
+        CoreAudioDevice defaultPlaybackDevice = devices.FirstOrDefault(d =>
+                d != null &&
+                d.IsDefaultDevice);
+
+        if (defaultPlaybackDevice != null)
+        {
+          SetLavBitstreamSettings(defaultPlaybackDevice.FullName);
         }
         else
         {
