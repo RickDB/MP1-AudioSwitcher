@@ -2,8 +2,9 @@
 ##### Plugin for Mediaportal 1 which allows you to:
 
 - Easily switch Windows playback device via context menu using a mapped remote or keyboard key
-- Set LAV audio bit streaming options per device
 - Set default Windows playback device on startup
+- Set LAV audio bit streaming options per device
+- Set LAV audio delay via context menu
 
 For setup instructions and support questions:
 

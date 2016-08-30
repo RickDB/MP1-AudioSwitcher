@@ -104,7 +104,6 @@ namespace MP1_AudioSwitcher
       GUIWindowManager.OnNewAction += OnNewAction;
       Settings.LoadSettings();
 
-
       if (!string.IsNullOrEmpty(Settings.DefaultPlaybackDevice))
       {
         var devices = GetPlaybackDevices();
@@ -127,7 +126,7 @@ namespace MP1_AudioSwitcher
         }
         else
         {
-          Log.Error("Default playback devices not found!");
+          Log.Error("Default playback device not found!");
         }
       }
       else if (Settings.LAVbitstreamPerDevice)
