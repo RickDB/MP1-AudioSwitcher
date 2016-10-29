@@ -13,21 +13,7 @@
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>AlwaysOverwrite</UpdateOption>
-              <LocalFileName>..\bin\Release\AudioSwitcher.AudioApi.CoreAudio.dll</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{57822ea2-beea-4cab-8168-2c25415d99d2}-AudioSwitcher.AudioApi.CoreAudio.dll</ZipFileName>
-              <DestinationFilename>%Plugins%\Windows\AudioSwitcher.AudioApi.CoreAudio.dll</DestinationFilename>
-            </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
-              <Param1 />
-              <UpdateOption>AlwaysOverwrite</UpdateOption>
-              <LocalFileName>..\bin\Release\AudioSwitcher.AudioApi.dll</LocalFileName>
-              <ZipFileName>Installer{CopyFile}\{b89dedc8-f18b-4d0b-99c2-093394510aed}-AudioSwitcher.AudioApi.dll</ZipFileName>
-              <DestinationFilename>%Plugins%\Windows\AudioSwitcher.AudioApi.dll</DestinationFilename>
-            </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
-              <Param1 />
-              <UpdateOption>AlwaysOverwrite</UpdateOption>
-              <LocalFileName>..\obj\Release\MP1-AudioSwitcher.dll</LocalFileName>
+              <LocalFileName>..\bin\Release\MP1-AudioSwitcher.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{626adc1f-f8bb-42c2-92b5-326f3177bcfa}-MP1-AudioSwitcher.dll</ZipFileName>
               <DestinationFilename>%Plugins%\Windows\MP1-AudioSwitcher.dll</DestinationFilename>
             </FileItem>
@@ -97,6 +83,63 @@ Click Next to continue or Cancel to exit Setup.</Value>
             <ActionItem Name="InstallFiles" ActionType="InstallFiles" ConditionGroup="">
               <Params>
                 <Items />
+              </Params>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+            </ActionItem>
+            <ActionItem Name="Remove obsolete files" ActionType="Script" ConditionGroup="">
+              <Params>
+                <Items>
+                  <SectionParam Name="Script">
+                    <Value>//css_reference "MpeCore.dll";
+
+using MpeCore.Classes;
+using MpeCore;
+using System.IO;
+using System;
+using System.Windows.Forms;
+using System.Diagnostics;
+
+public class Script
+{
+public static void Main(PackageClass packageClass, ActionItem actionItem)
+        {
+	string SourceFilePath_plugin = MpeInstaller.TransformInRealPath("%Plugins%");
+	try
+	{
+		if (File.Exists(Path.Combine(SourceFilePath_plugin, "Windows\\AudioSwitcher.AudioApi.dll")))
+		{
+			File.Delete(Path.Combine(SourceFilePath_plugin, "Windows\\AudioSwitcher.AudioApi.dll"));
+		}
+		
+		if (File.Exists(Path.Combine(SourceFilePath_plugin, "Windows\\AudioSwitcher.AudioApi.CoreAudio.dll")))
+		{
+			File.Delete(Path.Combine(SourceFilePath_plugin, "Windows\\AudioSwitcher.AudioApi.CoreAudio.dll"));
+		}
+	   }
+	   catch { }
+        }
+} </Value>
+                    <ValueType>Script</ValueType>
+                    <Description />
+                  </SectionParam>
+                  <SectionParam Name="Uninstall Script">
+                    <Value>//css_reference "MpeCore.dll";
+
+using MpeCore.Classes;
+using MpeCore;
+
+public class Script
+{
+    public static void Main(PackageClass packageClass, UnInstallItem item)
+    {
+        return;
+    }
+}
+</Value>
+                    <ValueType>Script</ValueType>
+                    <Description />
+                  </SectionParam>
+                </Items>
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
@@ -193,13 +236,13 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>1</Major>
       <Minor>1</Minor>
       <Build>3</Build>
-      <Revision>2</Revision>
+      <Revision>5</Revision>
     </Version>
     <ExtensionDescription>Easily switch audio devices via context menu using a mapped remote key.</ExtensionDescription>
     <VersionDescription />
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>https://raw.githubusercontent.com/RickDB/MP1-AudioSwitcher/master/MP1-AudioSwitcher/MPEI/Releases/AudioSwitcher_1.1.3.2.mpe1</OnlineLocation>
-    <ReleaseDate>2015-09-06T15:08:24.0955112+02:00</ReleaseDate>
+    <OnlineLocation>https://raw.githubusercontent.com/RickDB/MP1-AudioSwitcher/master/MP1-AudioSwitcher/MPEI/Releases/AudioSwitcher_1.1.3.5.mpe1</OnlineLocation>
+    <ReleaseDate>2016-10-29T15:08:24</ReleaseDate>
     <Tags />
     <Location>..\Release\[Name]_[Version].mpe1</Location>
     <Params>
@@ -239,21 +282,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>AlwaysOverwrite</UpdateOption>
-        <LocalFileName>..\bin\Release\AudioSwitcher.AudioApi.CoreAudio.dll</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{57822ea2-beea-4cab-8168-2c25415d99d2}-AudioSwitcher.AudioApi.CoreAudio.dll</ZipFileName>
-        <DestinationFilename>%Plugins%\Windows\AudioSwitcher.AudioApi.CoreAudio.dll</DestinationFilename>
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
-        <Param1 />
-        <UpdateOption>AlwaysOverwrite</UpdateOption>
-        <LocalFileName>..\bin\Release\AudioSwitcher.AudioApi.dll</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{b89dedc8-f18b-4d0b-99c2-093394510aed}-AudioSwitcher.AudioApi.dll</ZipFileName>
-        <DestinationFilename>%Plugins%\Windows\AudioSwitcher.AudioApi.dll</DestinationFilename>
-      </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
-        <Param1 />
-        <UpdateOption>AlwaysOverwrite</UpdateOption>
-        <LocalFileName>..\obj\Release\MP1-AudioSwitcher.dll</LocalFileName>
+        <LocalFileName>..\bin\Release\MP1-AudioSwitcher.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{626adc1f-f8bb-42c2-92b5-326f3177bcfa}-MP1-AudioSwitcher.dll</ZipFileName>
         <DestinationFilename>%Plugins%\Windows\MP1-AudioSwitcher.dll</DestinationFilename>
       </FileItem>
@@ -261,7 +290,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Resources\logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{5bd8141c-b23c-4c3a-8174-587778d4c18b}-logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{2548bfee-a829-4860-b236-b6972efb68cc}-logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
