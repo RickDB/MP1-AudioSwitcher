@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using AudioSwitcher.AudioApi;
 using AudioSwitcher.AudioApi.CoreAudio;
@@ -221,7 +222,8 @@ namespace MP1_AudioSwitcher
       try
       {
         Log.Debug("Audio Switcher - setting default playback device to: " + device.FullName);
-        _ac.SetDefaultDevice(device);
+        device.SetAsDefault(CancellationToken.None);
+
         if (Settings.LAVbitstreamPerDevice)
         {
           SetLavBitstreamSettings(device.FullName);
