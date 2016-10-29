@@ -290,7 +290,7 @@ public class Script
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Resources\logo.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{2548bfee-a829-4860-b236-b6972efb68cc}-logo.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{dc934f27-0844-4f6a-9783-aa4fcdf42e7e}-logo.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
